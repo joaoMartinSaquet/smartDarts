@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://b78itctx0y0pn"]
 
-[ext_resource type="Texture2D" uid="uid://cflbkeowoa8xm" path="res://art/Darts/dart_side_gold_green_outline.png" id="1_0jrbq"]
 [ext_resource type="Script" uid="uid://5a8rlphmyco3" path="res://Scripts/player.gd" id="1_xfe6g"]
+[ext_resource type="Texture2D" uid="uid://dnfb0e3jv4eeb" path="res://art/darts.png" id="2_xpcdj"]
 [ext_resource type="Script" uid="uid://cej14p6auk4xt" path="res://Scripts/AIScripts/controller.gd" id="3_6xolu"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pfr1p"]
@@ -11,11 +11,11 @@ radius = 24.0
 script = ExtResource("1_xfe6g")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 0.598648
-scale = Vector2(0.094, 0.137)
+position = Vector2(-3.8147e-06, 9.53674e-07)
+rotation = 2.44346
+scale = Vector2(0.280337, 0.138845)
 skew = -0.0296706
-texture = ExtResource("1_0jrbq")
-offset = Vector2(70, 20)
+texture = ExtResource("2_xpcdj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_pfr1p")

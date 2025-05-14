@@ -24,12 +24,9 @@ if __name__ == "__main__":
         obs = np.array(observation[0]["obs"])
         
         # constuct actions 
-        move_action = ctrl.step(obs[:2], obs[2:])[0:2]
-        if np.linalg.norm(obs[:2] - obs[2:]) < 50:
-            click_action = 1
-        else:
-            click_action = 0
+        move_action, click_action = ctrl.step(obs[:2], obs[2:])[0:2]
 
+        
         # ensure that actions is not out of theoritical max
         move_action =  np.clip(move_action, -80, 80)
         action = np.insert(move_action, 0 , click_action)

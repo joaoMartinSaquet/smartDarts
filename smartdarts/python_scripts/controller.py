@@ -1,6 +1,6 @@
 import numpy as np
 
-
+WIDTH_TARGET = 100
 
 class closed_loops():
     def __init__(self, x_init, dt = 0.008):
@@ -28,6 +28,7 @@ class closed_loops():
         self.B = 0.2*np.array([[0 ,0], [0, 0], [1 ,0], [0, 1]]) # old 10*np.array([[1 ,0], [-0.5, 1]])
         # self.dt = dt
         self.dt = 0.08
+        self.frame_in = 0
         # self.Ad = (1 +  self.A*dt)
         # self.Bd = self.B*dt
 
@@ -41,12 +42,23 @@ class closed_loops():
         Returns:
             _type_: _description_
         """
+
         # reconstruct x with the x observed
         self.x[0:2] = y_process
 
 
         # construct input of the process
         err = y_target - y_process # is the input
+        if np.linalg.norm(err) < WIDTH_TARGET:
+            click_action = 1
+        else :
+            click_action = 0
+        
+        # print("self frame_in = ", self.frame_in)
+        # if self.frame_in > 20:
+        #     click_action = 1
+        # else :
+        #     click_action = 0
         u = err
         
         # process step
@@ -54,4 +66,4 @@ class closed_loops():
         self.x = self.x + xd*self.dt
         action = self.x[2:4]
 
-        return action
+        return action, click_action

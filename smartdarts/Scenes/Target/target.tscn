@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://q2l3q8mxk0pr"]
 
-[ext_resource type="Texture2D" uid="uid://dxu8aakksfpte" path="res://art/Darts/dartboard_plain.png" id="1_cib55"]
 [ext_resource type="Script" uid="uid://cr67nqlmcmnrg" path="res://Scripts/target.gd" id="1_j35no"]
+[ext_resource type="Texture2D" uid="uid://b3hkhitp636f" path="res://art/full_assets (copy).png" id="2_jd5eg"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wddmv"]
 radius = 30.0
@@ -13,8 +13,8 @@ constant_linear_velocity = Vector2(150, 150)
 script = ExtResource("1_j35no")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.056, 0.053)
-texture = ExtResource("1_cib55")
+scale = Vector2(0.55, 0.546)
+texture = ExtResource("2_jd5eg")
 
 [node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
 

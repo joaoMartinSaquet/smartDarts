@@ -75,7 +75,12 @@ func _physics_process(delta: float) -> void:
 	if ai_controller.heuristic == "human":
 		pass # in this case this one is made by eery time an input is detected
 	else:
-		print("ai move  ")
+		
+		if ai_controller.click_action:
+				hit.emit()
+				clicks.append(true)
+		else: 
+			clicks.append(false)
 		movement = ai_controller.move_action
 		position += movement
 		poss_x.append(position.x)
@@ -85,11 +90,7 @@ func _physics_process(delta: float) -> void:
 		time.append(Time.get_ticks_usec())
 		targets_x.append(target_position.x)
 		targets_y.append(target_position.y)
-		if ai_controller.click_action:
-				hit.emit()
-				clicks.append(true)
-		else: 
-			clicks.append(false)
+
 	
 func start(pose):
 	print("start ! ")
