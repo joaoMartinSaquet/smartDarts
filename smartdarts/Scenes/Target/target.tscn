@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://q2l3q8mxk0pr"]
+
+[ext_resource type="Texture2D" uid="uid://dxu8aakksfpte" path="res://art/Darts/dartboard_plain.png" id="1_cib55"]
+[ext_resource type="Script" uid="uid://cr67nqlmcmnrg" path="res://Scripts/target.gd" id="1_j35no"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wddmv"]
+radius = 30.0
+
+[node name="Target" type="StaticBody2D"]
+collision_layer = 0
+collision_mask = 0
+constant_linear_velocity = Vector2(150, 150)
+script = ExtResource("1_j35no")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.056, 0.053)
+texture = ExtResource("1_cib55")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_wddmv")
+one_way_collision_margin = 0.0
+
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]

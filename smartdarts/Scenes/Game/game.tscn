@@ -1,0 +1,48 @@
+[gd_scene load_steps=6 format=3 uid="uid://daplyo5gulfgr"]
+
+[ext_resource type="Script" uid="uid://dalofputfsq8q" path="res://Scripts/game.gd" id="1_ciybh"]
+[ext_resource type="PackedScene" uid="uid://b78itctx0y0pn" path="res://Scenes/Player/player.tscn" id="2_flgk0"]
+[ext_resource type="PackedScene" uid="uid://q2l3q8mxk0pr" path="res://Scenes/Target/target.tscn" id="3_vifcx"]
+[ext_resource type="Texture2D" uid="uid://dvqmoj6kdxfoa" path="res://art/background.jpg" id="4_xfil1"]
+[ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="5_huoen"]
+
+[node name="Game" type="Node"]
+script = ExtResource("1_ciybh")
+
+[node name="GetTargetTimer" type="Timer" parent="."]
+
+[node name="SpawnTargetPosition" type="Marker2D" parent="."]
+
+[node name="SpawnPlayerPosition" type="Marker2D" parent="."]
+
+[node name="Player" parent="." groups=["game_trace"] instance=ExtResource("2_flgk0")]
+top_level = true
+z_index = 2
+
+[node name="StartTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="Target" parent="." instance=ExtResource("3_vifcx")]
+z_index = 1
+
+[node name="Backgound" type="Sprite2D" parent="."]
+position = Vector2(963, 530)
+scale = Vector2(0.274961, 0.265184)
+texture = ExtResource("4_xfil1")
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("5_huoen")
+action_repeat = 1
+metadata/_custom_type_script = "uid://bvvicuis6vyx2"
+
+[node name="GlobalEpTimer" type="Timer" parent="."]
+wait_time = 180.0
+
+[connection signal="hitted" from="." to="." method="_on_hitted"]
+[connection signal="missed" from="." to="." method="_on_missed"]
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
+[connection signal="player_in" from="Target" to="." method="_on_target_player_in"]
+[connection signal="player_out" from="Target" to="." method="_on_target_player_out"]
+[connection signal="timeout" from="GlobalEpTimer" to="." method="_on_global_ep_timer_timeout"]
