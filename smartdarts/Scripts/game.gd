@@ -3,11 +3,11 @@ extends Node
 
 var target_spawn_positions = []
 var target_number = 0
-var targets_column = 3
-var targets_row = 3
+var targets_column = 2
+var targets_row = 2
 var player_in = false
 var IS_PLAYER = false
-var one_ep = false
+var one_ep = true
 
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 

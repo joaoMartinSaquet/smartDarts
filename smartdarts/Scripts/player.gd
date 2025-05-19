@@ -30,7 +30,7 @@ func _ready() -> void:
 func game_over():
 	if ai_controller.heuristic == "human":
 		hide()
-	ai_controller.done = false
+	ai_controller.done = true
 	ai_controller.needs_reset = true
 	
 	
