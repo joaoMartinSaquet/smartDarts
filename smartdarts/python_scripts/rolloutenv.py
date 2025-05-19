@@ -26,7 +26,7 @@ if __name__ == "__main__":
         # constuct actions 
         move_action, click_action = ctrl.step(obs[:2], obs[2:])[0:2]
 
-        move_action = move_action + np.random.normal(0, 10, 2)
+        move_action = move_action + np.random.normal(0, 100, 2)
         # ensure that actions is not out of theoritical max
         move_action =  np.clip(move_action, -80, 80)
         action = np.insert(move_action, 0 , click_action)

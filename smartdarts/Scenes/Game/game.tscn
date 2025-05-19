@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://daplyo5gulfgr"]
+[gd_scene load_steps=6 format=3 uid="uid://daplyo5gulfgr"]
 
 [ext_resource type="Script" uid="uid://dalofputfsq8q" path="res://Scripts/game.gd" id="1_ciybh"]
 [ext_resource type="PackedScene" uid="uid://b78itctx0y0pn" path="res://Scenes/Player/player.tscn" id="2_flgk0"]
 [ext_resource type="PackedScene" uid="uid://q2l3q8mxk0pr" path="res://Scenes/Target/target.tscn" id="3_vifcx"]
+[ext_resource type="Texture2D" uid="uid://cntnobqjvbotk" path="res://art/background.jpg" id="5_ciybh"]
 [ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="5_huoen"]
 
 [node name="Game" type="Node"]
@@ -25,10 +26,6 @@ autostart = true
 [node name="Target" parent="." instance=ExtResource("3_vifcx")]
 z_index = 1
 
-[node name="Backgound" type="Sprite2D" parent="."]
-position = Vector2(963, 530)
-scale = Vector2(0.274961, 0.265184)
-
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("5_huoen")
 action_repeat = 1
@@ -37,10 +34,12 @@ metadata/_custom_type_script = "uid://bvvicuis6vyx2"
 [node name="GlobalEpTimer" type="Timer" parent="."]
 wait_time = 180.0
 
-[node name="ColorRect" type="ColorRect" parent="."]
-offset_right = 1916.0
-offset_bottom = 1065.0
-color = Color(0.245337, 0.278442, 0.662636, 1)
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 1913.0
+offset_bottom = 1073.0
+texture = ExtResource("5_ciybh")
 
 [connection signal="hitted" from="." to="." method="_on_hitted"]
 [connection signal="missed" from="." to="." method="_on_missed"]
