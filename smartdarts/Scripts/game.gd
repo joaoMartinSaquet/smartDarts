@@ -11,7 +11,6 @@ var IS_PLAYER = false
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
 var window_size = Vector2(0,0)
-
 signal hitted
 signal missed 
 
@@ -63,21 +62,24 @@ func start_episode():
 	target_number = 0
 	var target_pose = target_spawn_positions[target_number]
 	$Target.spawn(target_pose)
-	spawn_player(false)
+	spawn_player(true)
 	$Player.target_position = target_pose
 	
 #func _on_start_timer_timeout() -> void: # Replace with function body.
 	#start_episode()
 	
 func _on_player_hit() -> void:
+	var start_episode : bool
 	if player_in: 
 		print("hitted ! ", number_of_hit)
 		number_of_hit += 1 
 		hitted.emit()
 		if number_of_hit >= N_HIT_MAX:
+			start_episode = false
 			target_number = (target_number + 1) 
 			if target_number == targets_column * targets_row:
 				gameover()
+				start_episode = true
 			$Target.spawn(target_spawn_positions[target_number%(targets_column * targets_row)])
 			$Player.target_position = target_spawn_positions[target_number%(targets_column * targets_row)]
 			number_of_hit = 0
@@ -103,10 +105,10 @@ func spawn_player(start):
 		Input.warp_mouse(start_position)
 		$Player.show()
 		#$Player.start(start_position)
-		#if start: 	
-		
-			
-		#$Player.start(start_position)
+		print("starting ? ", start)
+		if start:
+			$Player.start(start_position)
+			start = false
 	else:
 		$Player.start(start_position)
 	#$Player.position = start_position
