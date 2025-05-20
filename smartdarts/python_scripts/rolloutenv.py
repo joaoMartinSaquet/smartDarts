@@ -22,7 +22,7 @@ def rolloutSmartDartEnv(env, Nstep, seed = 0):
         move_action, click_action = Controller.step(obs[:2], obs[2:])
 
         # clamp action to don't have to big displacement
-        move_action = np.clip(move_action, -100, 100)
+        move_action = np.clip(move_action, -80, 80)
 
         # add perturbation if there is any
         if perturbator is not None:
@@ -45,6 +45,7 @@ def rolloutSmartDartEnv(env, Nstep, seed = 0):
         reward_list.append(reward)
     
     # Close the environment
+    print("nstep", i)
     env.close()
     return np.cumsum(reward_list), reward_list
 

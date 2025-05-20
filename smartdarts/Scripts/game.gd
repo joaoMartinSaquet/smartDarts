@@ -7,7 +7,6 @@ var targets_column = 2
 var targets_row = 2
 var player_in = false
 var IS_PLAYER = false
-var one_ep = true
 
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
@@ -16,8 +15,7 @@ var window_size = Vector2(0,0)
 signal hitted
 signal missed 
 
-
-var file_name = "process_trace_3x3_5h.log"
+var file_name = "" 
 
 func save_game():
 	var saving_file = FileAccess.open("res://logs/" + file_name, FileAccess.WRITE)
@@ -35,10 +33,14 @@ func save_game():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("ready ! ")
+	IS_PLAYER = $Player.ai_controller.heuristic == "human"
+	file_name = $Player.ai_controller.heuristic + "_trace_" +  str(targets_row) + "x" + str(targets_column) + "_"  + str(N_HIT_MAX) + "h" + Time.get_datetime_string_from_system(true) + ".log"
+	
+	print("file name of logs : ", file_name)
+	
 	if IS_PLAYER:
 		Input.use_accumulated_input = false
-		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	start_episode()
 	
 	
@@ -94,7 +96,8 @@ func _on_target_player_out() -> void:
 func spawn_player(start): 
 	var start_position = Vector2(randi_range(0, window_size.x - 50), randi_range(0, window_size.y - 50))
 	
-	
+	print("ai controller ", $Player.ai_controller.heuristic)
+	print("is player ",IS_PLAYER)
 	if IS_PLAYER:
 		$Player.spawning = true
 		Input.warp_mouse(start_position)
@@ -118,17 +121,18 @@ func _on_hitted() -> void:
 	
 
 func _on_missed() -> void:
-	$Player.ai_controller.reward -= 1
+	$Player.ai_controller.reward -= 0
 
 func gameover():
 	save_game()
+	print("Game ends ! ")
+	if $Player.ai_controller.heuristic == "human":
+		get_tree().quit()
 	target_number = 0
 	$Player.reset()
 	#$Player.ai_controller.need_reset = true
 	#$Player.ai_controller.done = true
-	print("Game ends ! ")
-	if one_ep:
-		get_tree().quit()
+
 
 func _on_global_ep_timer_timeout() -> void:
 	gameover()
