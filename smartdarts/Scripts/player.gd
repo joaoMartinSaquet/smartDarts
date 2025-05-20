@@ -7,7 +7,7 @@ var target_position = Vector2(0, 0)
 var MAX_DISPLACEMENT = 80	
 var over = false
 var reward = 0
-var spawning = false
+var spawning = true
 
 var time = [0]
 
@@ -43,6 +43,8 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventMouseMotion:
 			#if event.button_index == 1 and event.pressed:
 			#hit.emit()
+			print("player input event position vs player position")
+			print(event.position, " vs ", position)
 			if not spawning:
 				#print("time : ", Time.get_ticks_msec())
 				var disp = event.position - position

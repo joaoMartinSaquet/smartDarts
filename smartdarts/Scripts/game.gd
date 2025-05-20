@@ -6,7 +6,7 @@ var target_number = 0
 var targets_column = 2
 var targets_row = 2
 var player_in = false
-var IS_PLAYER = false
+
 
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
@@ -31,10 +31,9 @@ func save_game():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if IS_PLAYER:
-		Input.use_accumulated_input = false
-		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	Input.use_accumulated_input = false
+	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 	start_episode()
 	
 	
@@ -72,9 +71,9 @@ func _on_player_hit() -> void:
 		number_of_hit += 1 
 		#print("hitted ! ", number_of_hit)
 		hitted.emit()
+		start_episode = false
 		if number_of_hit >= N_HIT_MAX:
 			#print("number of hit > to hit max")
-			start_episode = false
 			target_number = (target_number + 1) 
 			if target_number == targets_column * targets_row:
 				gameover()
@@ -103,8 +102,9 @@ func spawn_player(start):
 	
 	if $Player.ai_controller.heuristic == "human":
 		$Player.spawning = true
+		print("Game script warping mouse ")
 		Input.warp_mouse(start_position)
-		$Player.show()
+		$Player.start(start_position)
 		#$Player.start(start_position)
 		#print("starting ? ", start)
 		if start:
