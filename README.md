@@ -10,8 +10,17 @@ The goal for the agent is to try from his starting position to reach the targets
 ## Agent Behavior
 To Change the darts positions, we need to generate a displacement at each sample (0.008sec for a classical mouse). 
 - **Movement**: The agent will try to generate changes in its \( x \) and \( y \) coordinates (\( dx \) and \( dy \)) at each time interval.
-- **Goal**: The agent aims to reach each target sequentially.
-- 
+- **Goal**: The agent aims to reach each target H times sequentially.
+  
+## Installation
+Tested and developped with : 
+    - python 3.11.5
+    - Godot 4.4.1
+  
+See requirement.txt for packages
 
-## Visualization
-The grid and the positions of the targets and the agent can be visualized to monitor the agent's progress in reaching the targets.
+
+# sources 
+    - https://github.com/edbeeching/godot_rl_agents
+    - https://huggingface.co/learn/deep-rl-course/unitbonus3/godotrl
+  
