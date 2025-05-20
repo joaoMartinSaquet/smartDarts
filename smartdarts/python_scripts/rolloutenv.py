@@ -2,10 +2,10 @@ from godot_rl.core.godot_env import GodotEnv
 from gymnasium import spaces
 import numpy as np
 import controller as ctrl
+from perturbation import *
+MAX_DISP = 40
 
-
-
-def rolloutSmartDartEnv(env, Nstep, seed = 0):
+def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbation, seed = 0):
 
     observation, info = env.reset(seed=seed)
     
@@ -22,7 +22,7 @@ def rolloutSmartDartEnv(env, Nstep, seed = 0):
         move_action, click_action = Controller.step(obs[:2], obs[2:])
 
         # clamp action to don't have to big displacement
-        move_action = np.clip(move_action, -80, 80)
+        move_action = np.clip(move_action, -MAX_DISP, MAX_DISP)
 
         # add perturbation if there is any
         if perturbator is not None:
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # Run the environment
     r_summ, r_list = rolloutSmartDartEnv(env, 10000)
 
-    print("reward summ = ", r_summ)
+    print("reward summ = ", r_summ[-1])
 
 
         

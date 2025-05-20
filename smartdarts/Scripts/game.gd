@@ -14,9 +14,8 @@ var window_size = Vector2(0,0)
 signal hitted
 signal missed 
 
-var file_name = "" 
-
 func save_game():
+	var file_name =  $Player.ai_controller.heuristic + "_trace_" +  str(targets_row) + "x" + str(targets_column) + "_"  + str(N_HIT_MAX) + "h" + Time.get_datetime_string_from_system(true) + ".log"
 	var saving_file = FileAccess.open("res://logs/" + file_name, FileAccess.WRITE)
 	var save_nodes = get_tree().get_nodes_in_group("game_trace")
 	print("saving file ")
@@ -32,14 +31,10 @@ func save_game():
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	IS_PLAYER = $Player.ai_controller.heuristic == "human"
-	file_name = $Player.ai_controller.heuristic + "_trace_" +  str(targets_row) + "x" + str(targets_column) + "_"  + str(N_HIT_MAX) + "h" + Time.get_datetime_string_from_system(true) + ".log"
-	
-	print("file name of logs : ", file_name)
-	
 	if IS_PLAYER:
 		Input.use_accumulated_input = false
 		#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	start_episode()
 	
 	
@@ -52,6 +47,7 @@ func _process(delta: float) -> void:
 func start_episode():
 	print("start ep ! ")
 	window_size = get_viewport().size
+
 	#print("windows size : ", window_size.x / targets_column)
 	var y_target_iter =  (window_size.x) / (targets_column + 1)
 	var x_target_iter =  (window_size.y) / (targets_row  + 1 )
@@ -70,22 +66,26 @@ func start_episode():
 	
 func _on_player_hit() -> void:
 	var start_episode : bool
+	
 	if player_in: 
-		print("hitted ! ", number_of_hit)
+
 		number_of_hit += 1 
+		#print("hitted ! ", number_of_hit)
 		hitted.emit()
 		if number_of_hit >= N_HIT_MAX:
+			#print("number of hit > to hit max")
 			start_episode = false
 			target_number = (target_number + 1) 
 			if target_number == targets_column * targets_row:
 				gameover()
 				start_episode = true
+			#print("spawning targets ")
 			$Target.spawn(target_spawn_positions[target_number%(targets_column * targets_row)])
 			$Player.target_position = target_spawn_positions[target_number%(targets_column * targets_row)]
 			number_of_hit = 0
-		spawn_player(false)
+		spawn_player(start_episode)
 	else: 
-		print("target missed ! ")
+		#print("target missed ! ")
 		missed.emit()
 	
 		
@@ -98,14 +98,15 @@ func _on_target_player_out() -> void:
 func spawn_player(start): 
 	var start_position = Vector2(randi_range(0, window_size.x - 50), randi_range(0, window_size.y - 50))
 	
-	print("ai controller ", $Player.ai_controller.heuristic)
-	print("is player ",IS_PLAYER)
-	if IS_PLAYER:
+	#print("ai controller on spawn", $Player.ai_controller.heuristic)
+	#print("is player ",IS_PLAYER)
+	
+	if $Player.ai_controller.heuristic == "human":
 		$Player.spawning = true
 		Input.warp_mouse(start_position)
 		$Player.show()
 		#$Player.start(start_position)
-		print("starting ? ", start)
+		#print("starting ? ", start)
 		if start:
 			$Player.start(start_position)
 			start = false
@@ -113,7 +114,7 @@ func spawn_player(start):
 		$Player.start(start_position)
 	#$Player.position = start_position
 	
-	print("player position = ", $Player.position)
+	#print("player position = ", $Player.position)
 	#print("start position = ", start_position)
 	#$Player.warping_mouse = false
 

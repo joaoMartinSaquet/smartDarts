@@ -69,13 +69,14 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	var movement : Vector2
+
 	if ai_controller.needs_reset:
 		ai_controller.reset()
-	var movement : Vector2
+	#print("ai controller in player script",  ai_controller.heuristic)
 	if ai_controller.heuristic == "human":
 		pass # in this case this one is made by eery time an input is detected
 	else:
-		
 		if ai_controller.click_action:
 				hit.emit()
 				clicks.append(true)
@@ -93,7 +94,6 @@ func _physics_process(delta: float) -> void:
 
 	
 func start(pose):
-	print("start ! ")
 	position = pose
 	show()
 
