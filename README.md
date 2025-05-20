@@ -14,13 +14,13 @@ To Change the darts positions, we need to generate a displacement at each sample
   
 ## Installation
 Tested and developped with : 
-    - python 3.11.5
-    - Godot 4.4.1
+- python 3.11.5
+- Godot 4.4.1
   
 See requirement.txt for packages
 
 
 # sources 
-    - https://github.com/edbeeching/godot_rl_agents
-    - https://huggingface.co/learn/deep-rl-course/unitbonus3/godotrl
+- https://github.com/edbeeching/godot_rl_agents
+- https://huggingface.co/learn/deep-rl-course/unitbonus3/godotrl
   
