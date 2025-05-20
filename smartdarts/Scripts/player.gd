@@ -7,7 +7,6 @@ var target_position = Vector2(0, 0)
 var MAX_DISPLACEMENT = 80	
 var over = false
 var reward = 0
-var spawning = true
 
 var time = [0]
 
@@ -26,6 +25,7 @@ signal hit
 func _ready() -> void:
 	#show()
 	ai_controller.init(self)
+	print("Player starting positions ! 	", position)
 	
 func game_over():
 	if ai_controller.heuristic == "human":
@@ -41,38 +41,23 @@ func _input(event: InputEvent) -> void:
 			clicks.append(true)
 			hit.emit() 
 		if event is InputEventMouseMotion:
-			#if event.button_index == 1 and event.pressed:
-			#hit.emit()
-			print("player input event position vs player position")
-			print(event.position, " vs ", position)
-			if not spawning:
 				#print("time : ", Time.get_ticks_msec())
-				var disp = event.position - position
-				position = event.position
-				poss_x.append(position.x)
-				poss_y.append(position.y)
-				disp_x.append(disp.x)
-				disp_y.append(disp.y)
-				time.append(Time.get_ticks_usec())
-				targets_x.append(target_position.x)
-				targets_y.append(target_position.y)
-				
-			else:
-				spawning = false
-		#if event.pressed:
-			
-		# end log the relative displacement ! 
-		return
+			var disp = event.position - position
+			position = event.position
+			poss_x.append(position.x)
+			poss_y.append(position.y)
+			disp_x.append(disp.x)
+			disp_y.append(disp.y)
+			time.append(Time.get_ticks_usec())
+			targets_x.append(target_position.x)
+			targets_y.append(target_position.y)
+	return
 		
 func _process(delta: float) -> void:
 	time.append(delta + time[0])
-	#print("player position : ", position)
-
-
-
+	
 func _physics_process(delta: float) -> void:
 	var movement : Vector2
-
 	if ai_controller.needs_reset:
 		ai_controller.reset()
 	#print("ai controller in player script",  ai_controller.heuristic)
@@ -96,6 +81,7 @@ func _physics_process(delta: float) -> void:
 
 	
 func start(pose):
+	print("Player pos ")
 	position = pose
 	show()
 

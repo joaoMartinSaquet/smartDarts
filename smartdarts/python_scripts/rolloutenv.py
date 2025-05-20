@@ -5,7 +5,7 @@ import controller as ctrl
 from perturbation import *
 MAX_DISP = 40
 
-def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbation, seed = 0):
+def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, seed = 0):
 
     observation, info = env.reset(seed=seed)
     
@@ -13,7 +13,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbation, seed = 0):
     xinit = np.array(observation[0]["obs"][2:] + [0, 0]) 
     Controller = ctrl.closed_loops(xinit)
     
-    perturbator = None
+    perturbator = pertubator
     reward_list = []
     # rolling out env
     for i in range(Nstep):
@@ -54,12 +54,17 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbation, seed = 0):
 
 if __name__ == "__main__":
     
+
+    # create a perturbation
+    perturbator  = NormalJittering(0, 20)
+
     # Initialize the environment
     env = GodotEnv(convert_action_space=True)
 
     # Run the environment
-    r_summ, r_list = rolloutSmartDartEnv(env, 10000)
+    r_summ, r_list = rolloutSmartDartEnv(env, 10000, perturbator)
 
+    
     print("reward summ = ", r_summ[-1])
 
 

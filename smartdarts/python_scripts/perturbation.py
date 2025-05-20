@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Perturbation:
+class Perturbator:
     def __init__(self, name = "Perturbation"):
        self.name = name
 
@@ -11,7 +11,7 @@ class Perturbation:
 
 
 
-class NormalJittering(Perturbation):
+class NormalJittering(Perturbator):
 
     def __init__(self, bias, standard_deviation, name = "Jittering"):
         super().__init__(name=name)
