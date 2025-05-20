@@ -18,6 +18,13 @@ var clicks = []
 var targets_x = []
 var targets_y = []
 
+var hit_number = 0
+var target_number = 0
+
+var targets_ns = []
+var hit_ns = []
+
+
 @onready var ai_controller = $AIController2D
 
 signal hit
@@ -51,6 +58,7 @@ func _input(event: InputEvent) -> void:
 			time.append(Time.get_ticks_usec())
 			targets_x.append(target_position.x)
 			targets_y.append(target_position.y)
+
 	return
 		
 func _process(delta: float) -> void:
@@ -78,7 +86,8 @@ func _physics_process(delta: float) -> void:
 		time.append(Time.get_ticks_usec())
 		targets_x.append(target_position.x)
 		targets_y.append(target_position.y)
-
+		hit_ns.append(hit_number)
+		targets_ns.append(target_number)
 	
 func start(pose):
 	print("Player pos ")
@@ -93,6 +102,7 @@ func save():
 					'disp_y' : disp_y,
 					'target_x' : targets_x,
 					'target_y' : targets_y,
+					'targets_numbers' : targets_ns,
 					'time' : time}
 	return save_dict
 
