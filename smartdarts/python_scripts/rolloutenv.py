@@ -3,7 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import controller as ctrl
 from perturbation import *
-MAX_DISP = 20
+MAX_DISP = 60
 
 def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, seed = 0):
 
@@ -57,8 +57,9 @@ if __name__ == "__main__":
     
 
     # create a perturbation
-    # perturbator  = NormalJittering(0, 20)
-    perturbator = None
+    perturbator = NormalJittering(0, 20)
+    # perturbator = None
+
 
     # Initialize the environment
     env = GodotEnv(convert_action_space=True)

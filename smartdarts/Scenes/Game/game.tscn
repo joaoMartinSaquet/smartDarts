@@ -30,9 +30,6 @@ script = ExtResource("5_huoen")
 action_repeat = 1
 metadata/_custom_type_script = "uid://bvvicuis6vyx2"
 
-[node name="GlobalEpTimer" type="Timer" parent="."]
-wait_time = 180.0
-
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_right = 1910.0
 offset_bottom = 1081.0
@@ -43,4 +40,3 @@ offset_bottom = 1081.0
 [connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
 [connection signal="player_in" from="Target" to="." method="_on_target_player_in"]
 [connection signal="player_out" from="Target" to="." method="_on_target_player_out"]
-[connection signal="timeout" from="GlobalEpTimer" to="." method="_on_global_ep_timer_timeout"]

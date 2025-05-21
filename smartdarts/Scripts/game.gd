@@ -11,6 +11,7 @@ var player_in = false
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
 var window_size = Vector2(0,0)
+var time_to_reach_target = 0
 signal hitted
 signal missed 
 
@@ -32,7 +33,7 @@ func _ready() -> void:
 	start_episode()
 	
 func _process(delta: float) -> void:
-	pass 
+	time_to_reach_target += delta 
 	
 	
 func start_episode():
@@ -59,10 +60,11 @@ func _on_player_hit() -> void:
 		hitted.emit()
 		start_episode = false
 		if number_of_hit >= N_HIT_MAX:
-			target_number = (target_number + 1) % (targets_column * targets_row)
+			target_number = (target_number + 1)
 			if target_number == targets_column * targets_row:
 				gameover()
 				start_episode = true
+			target_number = target_number  % (targets_column * targets_row)
 			$Target.spawn(target_spawn_positions[target_number])
 			$Player.target_position = target_spawn_positions[target_number]
 			number_of_hit = 0
@@ -93,7 +95,8 @@ func spawn_player(start):
 
 
 func _on_hitted() -> void:
-	$Player.ai_controller.reward += 1
+	$Player.ai_controller.reward += exp(-time_to_reach_target)
+	time_to_reach_target = 0
 	
 
 func _on_missed() -> void:

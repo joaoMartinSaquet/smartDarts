@@ -86,6 +86,7 @@ class closed_loops():
 
 
         action = [xxdot[0] , xydot[0]]
+        print('action sent = ', action)
         # # reconstruct x with the x observed
 
         # self.x[0:2] = y_process

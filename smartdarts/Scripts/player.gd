@@ -78,6 +78,7 @@ func _physics_process(delta: float) -> void:
 		else: 
 			clicks.append(false)
 		movement = ai_controller.move_action
+		print("movement received : ", movement)
 		position += movement
 		poss_x.append(position.x)
 		poss_y.append(position.y)
@@ -90,7 +91,7 @@ func _physics_process(delta: float) -> void:
 		targets_ns.append(target_number)
 	
 func start(pose):
-	print("Player pos ")
+	#print("Player pos ")
 	position = pose
 	show()
 
@@ -103,6 +104,7 @@ func save():
 					'target_x' : targets_x,
 					'target_y' : targets_y,
 					'targets_numbers' : targets_ns,
+					'hit_number' : hit_ns,
 					'time' : time}
 	return save_dict
 
