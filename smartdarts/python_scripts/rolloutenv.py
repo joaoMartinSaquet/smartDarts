@@ -57,8 +57,8 @@ if __name__ == "__main__":
     
 
     # create a perturbation
-    perturbator = NormalJittering(0, 20)
-    # perturbator = None
+    # perturbator = NormalJittering(0, 20)
+    perturbator = None
 
 
     # Initialize the environment

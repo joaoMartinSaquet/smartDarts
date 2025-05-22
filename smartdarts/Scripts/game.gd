@@ -106,6 +106,7 @@ func gameover():
 	save_game()
 	print("Game ends ! ")
 	if $Player.ai_controller.heuristic == "human":
+		print("gathered reward  : ", $Player.ai_controller.reward)
 		get_tree().quit()
 	target_number = 0
 	$Player.reset()
