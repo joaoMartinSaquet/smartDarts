@@ -1,12 +1,38 @@
 from godot_rl.core.godot_env import GodotEnv
 from gymnasium import spaces
 import numpy as np
-import user_simulator as ctrl
+from user_simulator import *
 from perturbation import *
 from corrector import *
 
 
 MAX_DISP = 60
+
+
+def stepSmartDartEnv(env, obs, u_simulator : UserSimulator, perturbator : Perturbator, corrector = None):
+    """
+        Does'nt work we need to place our corrector inside... 
+    """
+    obs = np.array(observation[0]["obs"])
+    move_action, click_action = u_simulator.step(obs[:2], obs[2:])
+    
+    # clamp action to don't have to big displacement
+    move_action = np.clip(move_action, -MAX_DISP, MAX_DISP)
+
+    # add perturbation and corrector
+    if perturbator is not None:
+        observation = perturbator(observation)
+    if corrector is not None:
+        observation = corrector(observation)
+    
+
+    # contruct msg to be send to the env
+    action = np.insert(move_action, 0 , click_action)
+    action = np.array([ action for _ in range(env.num_envs) ])
+
+    observation, reward, done, info, _ = env.step(action)
+
+    return observation, reward, done, info
 
 def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, seed = 0):
 
@@ -16,7 +42,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
     # xinit = np.array(observation[0]["obs"][2:] + [0, 0]) 
     xinit = np.array(observation[0]["obs"][2:]) 
 
-    Controller = ctrl.VITE_USim(xinit)
+    u_simulator = VITE_USim(xinit)
     
     perturbator = pertubator
     reward_list = []
@@ -24,10 +50,8 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
     for i in range(Nstep):
         # get controller actions and process it (clamp, norm, pert, etc...)
         obs = np.array(observation[0]["obs"])
-        move_action, click_action = Controller.step(obs[:2], obs[2:])
 
-        # clamp action to don't have to big displacement
-        move_action = np.clip(move_action, -MAX_DISP, MAX_DISP)
+        move_action, click_action = u_simulator.step(obs[:2], obs[2:])
 
         # add perturbation if there is any
         if perturbator is not None:
@@ -36,6 +60,10 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
         if corrector is not None:
             move_action = corrector(move_action)
 
+
+        # clamp action to don't have to big displacement
+        move_action = np.clip(move_action, -MAX_DISP, MAX_DISP)
+        
         # contruct msg to be send to the env
         action = np.insert(move_action, 0 , click_action)
         action = np.array([ action for _ in range(env.num_envs) ])

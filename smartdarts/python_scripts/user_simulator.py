@@ -41,6 +41,13 @@ class VITE_USim(UserSimulator):
         self.dt = 1
 
 
+    def reset(self, x_init):
+        
+        self.xx = [x_init[0], 0]
+        self.xy = [x_init[1] , 0]
+        
+        
+
     def step(self, y_target, y_process):
         """_summary_
 

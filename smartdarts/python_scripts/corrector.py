@@ -1,5 +1,16 @@
 from collections import deque
 import numpy as np
+from torch import nn 
+from torch import optim
+import torch    
+from godot_rl.core.godot_env import GodotEnv
+
+
+from deep_stuff import networks
+from user_simulator import *
+from perturbation import *
+
+MAXSTEPS =int(20e3)
 
 class Corrector():
     def __init__(self, learn = False):
@@ -47,4 +58,138 @@ class LowPassCorrector(Corrector):
         
 
         
+class ReinforceCorrector(Corrector):
+    ''' 
+        Inpired from : https://www.geeksforgeeks.org/reinforce-algorithm/ 
+    '''
+    def __init__(self, env : GodotEnv, u_sim : UserSimulator, learn = False):
+        super().__init__(learn)
+
+        # algorithm hyperparameters
+        self.gamma = 0.99  # Discount factor
+        self.learning_rate = 0.001
+        self.num_episodes = 1000
+        self.batch_size = 64
+
+        self.seed = 0
+
+        self.mean_network = networks(n_input = 2, n_output = 2, layers = [16, 16])
+        self.std_network = networks(n_input = 2, n_output = 2, layers = [16, 16])
+
+        self.optimizer = optim.Adam(list(self.mean_network.parameters()) + list(self.std_network.parameters()), lr=self.learning_rate)
+        # self.criterion = nn.MSELoss()
+
+        # it s a godot env !
+        self.env = env 
+        self.u_sim = u_sim
+
+
+    def compute_return(self, rewards): 
+        G = np.zeros(len(rewards))
+        running_return = 0
         
+        for t in reversed(range(len(rewards))):
+            running_return = self.gamma * running_return + rewards[t][0]
+            G[t] = running_return
+        return G
+
+
+    def train_step(self, obss, actions, rewards):
+        
+        G = self.compute_return(rewards)
+        means_actions = self.mean_network(obss)
+        std_actions = self.std_network(obss)
+
+        stds = torch.exp(std_actions)
+        dist = torch.distributions.Normal(means_actions, stds)
+            
+        action = dist.sample()
+        log_probs = dist.log_prob(actions).sum(dim=-1)
+
+
+        # Compute policy loss
+        # print(G)
+        policy_loss = -(log_probs * torch.tensor(G)).mean()
+
+        # Backward pass
+        self.optimizer.zero_grad()
+        policy_loss.backward()
+        self.optimizer.step()
+
+
+    def training_loop(self):
+        for episode in range(self.num_episodes):
+            observation, info = self.env.reset(seed=self.seed)
+            xinit = np.array(observation[0]["obs"][2:]) 
+
+            self.u_sim.reset(xinit)
+
+            done = False
+            states, actions, rewards = [], [], []
+
+            for t in range(MAXSTEPS):
+                    
+                obs = np.array(observation[0]["obs"])
+
+                # get simulator movements 
+                move_action, click_action = self.u_sim.step(obs[:2], obs[2:])
+
+                state = torch.tensor(move_action, dtype=torch.float32)
+                means = self.mean_network(state)
+                log_stds = self.std_network(state)
+
+                stds = torch.exp(log_stds)
+
+                dist = torch.distributions.Normal(means, stds)
+                corrector_action = dist.sample()
+
+                # contruct msg to be send to the env
+                # print("corrector actions : ",corrector_action)
+                smartDart_action = np.insert(np.clip(corrector_action, -80, 80), 0 , click_action)
+                smartDart_action = np.array([ smartDart_action for _ in range(self.env.num_envs) ])
+                
+
+
+                next_observation, reward, done, info, _ = self.env.step(smartDart_action)
+
+                done = any(done)
+
+                states.append(state)
+                actions.append(corrector_action)
+                rewards.append(reward)
+
+                observation = next_observation
+
+                if done:
+                    break
+            
+
+            print("rewards summ at ep ", episode, " : ", np.sum(rewards))
+            self.train_step(torch.stack(states), torch.stack(actions), rewards)
+
+
+
+
+if __name__ == "__main__":
+    
+
+        # create a perturbation
+    perturbator = NormalJittering(0, 20)
+    # perturbator = None
+
+
+    # create a corrector
+    # corrector = None
+    corrector = LowPassCorrector(5)
+
+    # Initialize the environment
+    env = GodotEnv(convert_action_space=True)
+    
+    
+    u_sim = VITE_USim([0, 0])
+
+    corr = ReinforceCorrector(env, u_sim)
+    # corr.training_loop(Corrector)
+    corr.training_loop()
+
+    env.close()
