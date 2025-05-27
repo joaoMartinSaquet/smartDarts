@@ -78,7 +78,6 @@ func _physics_process(delta: float) -> void:
 		else: 
 			clicks.append(false)
 		movement = ai_controller.move_action
-		print("movement received : ", movement)
 		position += movement
 		poss_x.append(position.x)
 		poss_y.append(position.y)

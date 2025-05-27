@@ -93,6 +93,7 @@ func get_obs_space():
 
 
 func reset():
+	print('i did reset !!!!!!')
 	n_steps = 0
 	needs_reset = false
 

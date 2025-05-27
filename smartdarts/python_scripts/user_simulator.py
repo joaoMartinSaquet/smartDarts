@@ -2,7 +2,19 @@ import numpy as np
 
 WIDTH_TARGET = 20
 
-class closed_loops():
+
+class UserSimulator():
+    def __init__(self):
+        pass
+
+    def step(self):
+        pass
+
+    def reset(self):
+        pass
+
+
+class VITE_USim(UserSimulator):
     def __init__(self, x_init, dt = 0.008):
         """the controller acting as a closed loops, we needs to compute the error in 2D and then return the displacement actions
 
@@ -14,29 +26,6 @@ class closed_loops():
             Y is xdisp and ydisp
             xd = 
         """
-        # kx = -0
-        # ky = -0
-        # cx = -0
-        # cy = -0
-        # k = -1
-        # ku = 1
-        # self.kp = 10
-        # print("x_init = ", x_init)
-        # self.x = x_init
- 
-        # # self.A = -k*np.eye(
-        # #    4,4, 
-        # # )
-
-        # # self.A = k*np.array([[0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [-0, -0, -0.1, 1]])
-        # # self.B = ku * np.array([[0 ,0], [0, 0], [0.008 ,0], [0, 0.008]]) # 0.2*np.array([[0 ,0], [0, 0], [1 ,0], [0, 1]])
-        # # # self.dt = dt
-        # self.A = np.array([[0, 1], [-1, -1]])
-        # self.B = np.array([[1, 0], [0, 1]])
-        # self.dt = 1
-        # self.frame_in = 0
-        # # self.Ad = (1 +  self.A*dt)
-        # # self.Bd = self.B*dt
 
         # x position system [x, xdot]
         self.Ax = 0.08*np.array([[0, 1], [-1, -1]])
@@ -63,8 +52,7 @@ class closed_loops():
            
             
         """
-        print("y_target = ", y_target)
-        print("y_process = ", y_process)
+
         err = y_target - y_process # is the input
         if np.linalg.norm(err) < WIDTH_TARGET:
             click_action = 1
@@ -86,22 +74,5 @@ class closed_loops():
 
 
         action = [xxdot[0] , xydot[0]]
-        print('action sent = ', action)
-        # # reconstruct x with the x observed
 
-        # self.x[0:2] = y_process
-        # print(y_target)
-        # # construct input of the process
-        # err = y_target - y_process # is the input
-
-
-        # u = self.kp*err
-        # u = y_target
-        # # u =  # Bis id
-
-        # # process step
-        # xd = self.A @ self.x + self.B @ u
-        # self.x = self.x + xd*self.dt
-        # action = xd
-        # print("self.x  at the end", self.x[2:], "err ", err)
         return action, click_action

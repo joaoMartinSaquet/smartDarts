@@ -30,6 +30,6 @@ func get_action_space() -> Dictionary:
 
 func set_action(action) -> void:
 	#move_action = clamp(action.move_action, -_player.MAX_DISPLACEMENT, _player.MAX_DISPLACEMENT)
-	#print("here !set actioin ", action)
+	#print("here !set actioin ", aéction)
 	move_action = Vector2(action["move_action"][0], action["move_action"][1])
 	click_action = action["click_action"]
