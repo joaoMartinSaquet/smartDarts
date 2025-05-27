@@ -3,6 +3,9 @@ from gymnasium import spaces
 import numpy as np
 import user_simulator as ctrl
 from perturbation import *
+from corrector import *
+
+
 MAX_DISP = 60
 
 def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, seed = 0):
@@ -38,6 +41,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
         action = np.array([ action for _ in range(env.num_envs) ])
 
         # step the env
+        # print("action sended at step {i}, action = {action}".format(i = i, action = action))
         observation, reward, done, info, _ = env.step(action)
 
         # print("done , reward = ", done, reward)
@@ -57,10 +61,15 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
 if __name__ == "__main__":
     
     N = 2
-    # create a perturbation
-    # perturbator = NormalJittering(0, 20)
-    perturbator = None
 
+    # create a perturbation
+    perturbator = NormalJittering(0, 20)
+    # perturbator = None
+
+
+    # create a corrector
+    # corrector = None
+    corrector = LowPassCorrector(5)
 
     # Initialize the environment
     env = GodotEnv(convert_action_space=True)
@@ -69,7 +78,7 @@ if __name__ == "__main__":
     for j in range(N):
         print("ep : ", j)
         # Run the environment
-        r_summ, r_list = rolloutSmartDartEnv(env, 10000, perturbator)
+        r_summ, r_list = rolloutSmartDartEnv(env, 10000, perturbator, corrector)
         
         
         print("reward summ = ", r_summ[-1])
