@@ -10,7 +10,8 @@ from deep_stuff import networks
 from user_simulator import *
 from perturbation import *
 
-MAXSTEPS =int(20e3)
+# steps where we say, that's enough reset yourselves
+MAXSTEPS =int(1e6)
 
 class Corrector():
     def __init__(self, learn = False):
@@ -67,8 +68,8 @@ class ReinforceCorrector(Corrector):
 
         # algorithm hyperparameters
         self.gamma = 0.99  # Discount factor
-        self.learning_rate = 0.001
-        self.num_episodes = 1000
+        self.learning_rate = 0.01
+        self.num_episodes = 500
         self.batch_size = 64
 
         self.seed = 0
@@ -118,7 +119,11 @@ class ReinforceCorrector(Corrector):
 
 
     def training_loop(self):
+
+        ep_reward = []
+
         for episode in range(self.num_episodes):
+            print("reset env , episode : ",episode)
             observation, info = self.env.reset(seed=self.seed)
             xinit = np.array(observation[0]["obs"][2:]) 
 
@@ -160,12 +165,19 @@ class ReinforceCorrector(Corrector):
 
                 observation = next_observation
 
+                # print("step : ",t, " reward : ", reward)
                 if done:
                     break
-            
+            # print("done ! episode : ",episode)
 
             print("rewards summ at ep ", episode, " : ", np.sum(rewards))
+            ep_reward.append(np.sum(rewards))
+
             self.train_step(torch.stack(states), torch.stack(actions), rewards)
+
+            np.save("rewards.npy", np.array(ep_reward))
+
+
 
 
 
@@ -179,8 +191,8 @@ if __name__ == "__main__":
 
 
     # create a corrector
-    # corrector = None
-    corrector = LowPassCorrector(5)
+    corrector = None
+    # corrector = LowPassCorrector(5)
 
     # Initialize the environment
     env = GodotEnv(convert_action_space=True)

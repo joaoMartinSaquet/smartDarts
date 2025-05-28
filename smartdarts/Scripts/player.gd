@@ -28,6 +28,7 @@ var hit_ns = []
 @onready var ai_controller = $AIController2D
 
 signal hit
+signal reset_game
 
 func _ready() -> void:
 	#show()
@@ -35,11 +36,12 @@ func _ready() -> void:
 	print("Player starting positions ! 	", position)
 	
 func game_over():
+	print("here ! ")
 	if ai_controller.heuristic == "human":
 		hide()
 	ai_controller.done = true
 	ai_controller.needs_reset = true
-	
+
 	
 func _input(event: InputEvent) -> void:
 	if ai_controller.heuristic == "human":
@@ -63,11 +65,22 @@ func _input(event: InputEvent) -> void:
 		
 func _process(delta: float) -> void:
 	time.append(delta + time[0])
+	var window_size = get_viewport().size
+	if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
+		#print("reset cause out of bonds")
+		ai_controller.reward += -delta
+		#ai_controller.done = true
+		#ai_controller.needs_reset = true
+		#reset_game.emit()
+		
 	
 func _physics_process(delta: float) -> void:
 	var movement : Vector2
 	if ai_controller.needs_reset:
+		ai_controller.needs_reset = false
 		ai_controller.reset()
+		reset_game.emit()
+
 	#print("ai controller in player script",  ai_controller.heuristic)
 	if ai_controller.heuristic == "human":
 		pass # in this case this one is made by eery time an input is detected

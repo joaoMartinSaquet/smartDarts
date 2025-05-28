@@ -29,7 +29,7 @@ func save_game():
 func _ready() -> void:
 	Input.use_accumulated_input = false
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
-	Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 	start_episode()
 	
 func _process(delta: float) -> void:
@@ -103,16 +103,18 @@ func _on_missed() -> void:
 	$Player.ai_controller.reward -= 0
 
 func gameover():
-	save_game()
+	#save_game()
 	print("Game ends ! ")
 	print("ai heuristic ", $Player.ai_controller.heuristic)
-	if $Player.ai_controller.heuristic == "human":
+	if $Player.ai_controller.heuristic == "human" :
 		print("gathered reward  : ", $Player.ai_controller.reward)
 		get_tree().quit()
 	target_number = 0
-	$Player.reset()
+	#$Player.reset()
+	start_episode()
 
 func _on_global_ep_timer_timeout() -> void:
+	print("global ep time out ? ")
 	gameover()
 	
 func set_player_hit_and_target_num() -> void:

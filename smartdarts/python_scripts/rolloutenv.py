@@ -88,16 +88,16 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
 
 if __name__ == "__main__":
     
-    N = 2
+    N = 1
 
     # create a perturbation
-    perturbator = NormalJittering(0, 20)
-    # perturbator = None
+    # perturbator = NormalJittering(0, 20)
+    perturbator = None
 
 
     # create a corrector
-    # corrector = None
-    corrector = LowPassCorrector(5)
+    corrector = None
+    # corrector = LowPassCorrector(5)
 
     # Initialize the environment
     env = GodotEnv(convert_action_space=True)

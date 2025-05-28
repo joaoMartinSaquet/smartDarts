@@ -26,13 +26,33 @@ class VITE_USim(UserSimulator):
             Y is xdisp and ydisp
             xd = 
         """
+        # Non working dynamics but could be interesiting to see if we can make it works with a controller behind 
+        # self.gamma = 0.08
+        # # x position system [x, xdot]
 
+        # # self.Ax = np.array([[0, 1], [-1, -1]]) * self.gamma OLD
+        # self.Ax = np.array([[0, 1], [-self.gamma, -self.gamma]]) 
+        # # self.Bx = np.array([[1], [0]])/12.5 OLD
+        # self.Bx = np.array([[0], [1]])*self.gamma
+
+
+        # # self.Ay = np.array([[0, 1], [-1, -1]]) * self.gamma OLD
+        # self.Ay = np.array([[0, 1], [-self.gamma, -self.gamma]]) 
+        # # self.By = np.array([[1], [0]])/12.5
+        # self.By = np.array([[0], [1]]) * self.gamma
+
+
+
+
+
+        self.gamma = 0.08
         # x position system [x, xdot]
-        self.Ax = 0.08*np.array([[0, 1], [-1, -1]])
+
+        self.Ax = np.array([[0, 1], [-1, -1]]) * self.gamma
         self.Bx = np.array([[1], [0]])/12.5
 
 
-        self.Ay = np.array([[0, 1], [-1, -1]]) * 0.08
+        self.Ay = np.array([[0, 1], [-1, -1]]) * self.gamma 
         self.By = np.array([[1], [0]])/12.5
 
         self.xx = [x_init[0], 0]
