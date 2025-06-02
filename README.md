@@ -20,6 +20,28 @@ Tested and developped with :
 See requirement.txt for packages
 
 
+## Train
+### Default
+Default training support only Reinforce algorithm with a neural network.
+to launch the training script :
+```
+    python Scripts/corrector.py
+```
+
+# using the API : 
+
+1. Create an instance of a trainable corrector
+example : 
+```
+    kwargs = {hyperparamters : ... }
+    corrector = ReinforceCorrector(**kwargs)
+```
+2. Launch the training 
+``` 
+    corrector.train()
+```
+
+
 # sources 
 - https://github.com/edbeeching/godot_rl_agents
 - https://huggingface.co/learn/deep-rl-course/unitbonus3/godotrl
