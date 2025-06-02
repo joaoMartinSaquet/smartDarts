@@ -95,17 +95,16 @@ func spawn_player(start):
 
 
 func _on_hitted() -> void:
-	$Player.ai_controller.reward += exp(-time_to_reach_target)
+	$Player.ai_controller.reward += 10*exp(-time_to_reach_target)
 	time_to_reach_target = 0
 	
 
 func _on_missed() -> void:
+	
 	$Player.ai_controller.reward -= 0
 
 func gameover():
 	#save_game()
-	print("Game ends ! ")
-	print("ai heuristic ", $Player.ai_controller.heuristic)
 	if $Player.ai_controller.heuristic == "human" :
 		print("gathered reward  : ", $Player.ai_controller.reward)
 		get_tree().quit()
@@ -115,7 +114,7 @@ func gameover():
 
 func _on_global_ep_timer_timeout() -> void:
 	print("global ep time out ? ")
-	gameover()
+	#gameover()
 	
 func set_player_hit_and_target_num() -> void:
 	$Player.hit_number = number_of_hit

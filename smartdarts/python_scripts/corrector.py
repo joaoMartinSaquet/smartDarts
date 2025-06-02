@@ -104,7 +104,7 @@ class ReinforceCorrector(Corrector):
         stds = torch.exp(std_actions)
         dist = torch.distributions.Normal(means_actions, stds)
             
-        action = dist.sample()
+        # action = dist.sample()
         log_probs = dist.log_prob(actions).sum(dim=-1)
 
 
@@ -156,7 +156,7 @@ class ReinforceCorrector(Corrector):
 
 
                 next_observation, reward, done, info, _ = self.env.step(smartDart_action)
-
+                # print("done : ", done)
                 done = any(done)
 
                 states.append(state)
@@ -168,6 +168,9 @@ class ReinforceCorrector(Corrector):
                 # print("step : ",t, " reward : ", reward)
                 if done:
                     break
+                if t == MAXSTEPS - 1:
+                    print("max steps reached : ", t)
+                    
             # print("done ! episode : ",episode)
 
             print("rewards summ at ep ", episode, " : ", np.sum(rewards))

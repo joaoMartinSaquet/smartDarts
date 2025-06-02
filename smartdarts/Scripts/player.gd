@@ -33,14 +33,16 @@ signal reset_game
 func _ready() -> void:
 	#show()
 	ai_controller.init(self)
+	ai_controller.reset_after = 1e4
+	
 	print("Player starting positions ! 	", position)
 	
 func game_over():
-	print("here ! ")
+	print("player game over ! ")
 	if ai_controller.heuristic == "human":
 		hide()
 	ai_controller.done = true
-	ai_controller.needs_reset = true
+	#ai_controller.needs_reset = true
 
 	
 func _input(event: InputEvent) -> void:
@@ -68,16 +70,15 @@ func _process(delta: float) -> void:
 	var window_size = get_viewport().size
 	if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
 		#print("reset cause out of bonds")
-		ai_controller.reward += -delta
-		#ai_controller.done = true
-		#ai_controller.needs_reset = true
-		#reset_game.emit()
+		ai_controller.reward += -30
+		ai_controller.done = true
+		ai_controller.needs_reset = true
+		reset_game.emit()
 		
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var movement : Vector2
-	if ai_controller.needs_reset:
-		ai_controller.needs_reset = false
+	if ai_controller.needs_reset and ai_controller.heuristic != "human":
 		ai_controller.reset()
 		reset_game.emit()
 
