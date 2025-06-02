@@ -32,12 +32,12 @@ to launch the training script :
 
 1. Create an instance of a trainable corrector
 example : 
-```
+```python
     kwargs = {hyperparamters : ... }
     corrector = ReinforceCorrector(**kwargs)
 ```
 2. Launch the training 
-``` 
+```python
     corrector.train()
 ```
 
@@ -45,4 +45,4 @@ example :
 # sources 
 - https://github.com/edbeeching/godot_rl_agents
 - https://huggingface.co/learn/deep-rl-course/unitbonus3/godotrl
-  
+- https://paperswithcode.com/method/reinforce
