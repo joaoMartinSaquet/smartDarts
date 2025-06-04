@@ -34,6 +34,6 @@ offset_bottom = 1081.0
 [connection signal="hitted" from="." to="." method="_on_hitted"]
 [connection signal="missed" from="." to="." method="_on_missed"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]
-[connection signal="reset_game" from="Player" to="." method="gameover"]
+[connection signal="reset_game" from="Player" to="." method="_on_player_reset_game"]
 [connection signal="player_in" from="Target" to="." method="_on_target_player_in"]
 [connection signal="player_out" from="Target" to="." method="_on_target_player_out"]

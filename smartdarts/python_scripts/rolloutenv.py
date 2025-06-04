@@ -6,7 +6,7 @@ from perturbation import *
 from corrector import *
 
 
-MAX_DISP = 60
+MAX_DISP = 40
 
 
 def stepSmartDartEnv(env, obs, u_simulator : UserSimulator, perturbator : Perturbator, corrector = None):
@@ -69,7 +69,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
         action = np.array([ action for _ in range(env.num_envs) ])
 
         # step the env
-        # print("action sended at step {i}, action = {action}".format(i = i, action = action))
+        print("action sended at step {i}, action = {action}".format(i = i, action = action))
         observation, reward, done, info, _ = env.step(action)
 
         # print("done , reward = ", done, reward)

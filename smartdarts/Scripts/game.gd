@@ -7,6 +7,7 @@ var targets_column = 2
 var targets_row = 2
 var player_in = false
 
+var reward_gathered = 0
 
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
@@ -33,11 +34,10 @@ func _ready() -> void:
 	start_episode()
 	
 func _process(delta: float) -> void:
-	time_to_reach_target += delta 
+	time_to_reach_target += 1 
 	
 	
 func start_episode():
-	print("start ep ! ")
 	window_size = get_viewport().size
 	var y_target_iter =  (window_size.x) / (targets_column + 1)
 	var x_target_iter =  (window_size.y) / (targets_row  + 1 )
@@ -46,6 +46,7 @@ func start_episode():
 		for j in range(targets_column):
 			target_spawn_positions.append(Vector2(y_target_iter*(j + 1), x_target_iter*(i+1)))
 	target_number = 0
+	number_of_hit = 0
 	var target_pose = target_spawn_positions[target_number]
 	$Target.spawn(target_pose)
 	spawn_player(true)
@@ -95,7 +96,14 @@ func spawn_player(start):
 
 
 func _on_hitted() -> void:
-	$Player.ai_controller.reward += 10*exp(-time_to_reach_target)
+	
+	print("hitted n : ",number_of_hit)
+	if $Player.ai_controller.heuristic != "human":
+		time_to_reach_target *= 0.064 # Speedup x dt ( 8 * 0.008)
+	else:
+		time_to_reach_target *= 0.008
+	$Player.ai_controller.reward += exp(-0.1*time_to_reach_target)
+	reward_gathered += exp(-0.1*time_to_reach_target) 
 	time_to_reach_target = 0
 	
 
@@ -104,19 +112,23 @@ func _on_missed() -> void:
 	$Player.ai_controller.reward -= 0
 
 func gameover():
-	#save_game()
-	if $Player.ai_controller.heuristic == "human" :
+	print("game over ! ")
+	if $Player.ai_controller.heuristic == "human":
+		save_game()
 		print("gathered reward  : ", $Player.ai_controller.reward)
-		get_tree().quit()
+		#get_tree().quit()
+	else: 
+		$Player.ai_controller.done = true
+	#print("gathered reward  : ", reward_gathered)
 	target_number = 0
 	#$Player.reset()
 	start_episode()
 
-func _on_global_ep_timer_timeout() -> void:
-	print("global ep time out ? ")
-	#gameover()
-	
 func set_player_hit_and_target_num() -> void:
 	$Player.hit_number = number_of_hit
 	$Player.target_number = target_number
 	
+
+
+func _on_player_reset_game() -> void:
+	start_episode()

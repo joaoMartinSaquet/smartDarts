@@ -34,7 +34,7 @@ func _ready() -> void:
 	#show()
 	ai_controller.init(self)
 	ai_controller.reset_after = 1e4
-	
+	ai_controller.reward = 0
 	print("Player starting positions ! 	", position)
 	
 func game_over():
@@ -70,14 +70,15 @@ func _process(delta: float) -> void:
 	var window_size = get_viewport().size
 	if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
 		#print("reset cause out of bonds")
-		ai_controller.reward += -30
-		ai_controller.done = true
-		ai_controller.needs_reset = true
-		reset_game.emit()
+		ai_controller.reward += -0.01
+		#ai_controller.done = true
+		#ai_controller.needs_reset = true
+		#reset_game.emit()
 		
 	
 func _physics_process(_delta: float) -> void:
 	var movement : Vector2
+	#print("ai reward ", ai_controller.reward)
 	if ai_controller.needs_reset and ai_controller.heuristic != "human":
 		ai_controller.reset()
 		reset_game.emit()

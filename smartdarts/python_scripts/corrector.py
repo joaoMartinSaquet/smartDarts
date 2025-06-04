@@ -4,7 +4,9 @@ from torch import nn
 from torch import optim
 import torch    
 from godot_rl.core.godot_env import GodotEnv
-
+import sys
+import os
+import time
 
 from deep_stuff import networks
 from user_simulator import *
@@ -63,19 +65,24 @@ class ReinforceCorrector(Corrector):
     ''' 
         Inpired from : https://www.geeksforgeeks.org/reinforce-algorithm/ 
     '''
-    def __init__(self, env : GodotEnv, u_sim : UserSimulator, learn = False):
+    def __init__(self, env : GodotEnv, u_sim : UserSimulator, learn = False, log = False):
         super().__init__(learn)
+        self.log = log
+        self.log_path = "logs_corrector/Reinforce/" + time.strftime("%Y%m%d-%H%M%S") 
+        if not os.path.exists(self.log_path) and self.log:
+            os.makedirs(self.log_path)
 
         # algorithm hyperparameters
         self.gamma = 0.99  # Discount factor
         self.learning_rate = 0.01
-        self.num_episodes = 500
+        self.num_episodes = 1
         self.batch_size = 64
 
         self.seed = 0
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.mean_network = networks(n_input = 2, n_output = 2, layers = [16, 16])
-        self.std_network = networks(n_input = 2, n_output = 2, layers = [16, 16])
+        self.mean_network = networks(n_input = 2, n_output = 2, layers = [16, 16]).to(self.device)
+        self.std_network = networks(n_input = 2, n_output = 2, layers = [16, 16]).to(self.device)
 
         self.optimizer = optim.Adam(list(self.mean_network.parameters()) + list(self.std_network.parameters()), lr=self.learning_rate)
         # self.criterion = nn.MSELoss()
@@ -110,7 +117,7 @@ class ReinforceCorrector(Corrector):
 
         # Compute policy loss
         # print(G)
-        policy_loss = -(log_probs * torch.tensor(G)).mean()
+        policy_loss = -(log_probs * torch.tensor(G).to(self.device)).mean()
 
         # Backward pass
         self.optimizer.zero_grad()
@@ -123,6 +130,11 @@ class ReinforceCorrector(Corrector):
         ep_reward = []
 
         for episode in range(self.num_episodes):
+
+            if episode == self.num_episodes - 1:
+                game_obs = []
+                u_sim_out = []
+                model_out = []
             print("reset env , episode : ",episode)
             observation, info = self.env.reset(seed=self.seed)
             xinit = np.array(observation[0]["obs"][2:]) 
@@ -139,7 +151,7 @@ class ReinforceCorrector(Corrector):
                 # get simulator movements 
                 move_action, click_action = self.u_sim.step(obs[:2], obs[2:])
 
-                state = torch.tensor(move_action, dtype=torch.float32)
+                state = torch.tensor(move_action, dtype=torch.float32).to(self.device)
                 means = self.mean_network(state)
                 log_stds = self.std_network(state)
 
@@ -150,7 +162,7 @@ class ReinforceCorrector(Corrector):
 
                 # contruct msg to be send to the env
                 # print("corrector actions : ",corrector_action)
-                smartDart_action = np.insert(np.clip(corrector_action, -80, 80), 0 , click_action)
+                smartDart_action = np.insert(np.clip(corrector_action.to("cpu").numpy(), -80, 80), 0 , click_action)
                 smartDart_action = np.array([ smartDart_action for _ in range(self.env.num_envs) ])
                 
 
@@ -170,15 +182,29 @@ class ReinforceCorrector(Corrector):
                     break
                 if t == MAXSTEPS - 1:
                     print("max steps reached : ", t)
+
+                if episode == self.num_episodes - 1:
+                    print("Logging last episode")
+                    game_obs.append(obs)
+                    u_sim_out.append(move_action)
+                    model_out.append(corrector_action)
+
                     
             # print("done ! episode : ",episode)
 
             print("rewards summ at ep ", episode, " : ", np.sum(rewards))
             ep_reward.append(np.sum(rewards))
 
-            self.train_step(torch.stack(states), torch.stack(actions), rewards)
+            self.train_step(torch.stack(states).to(self.device), torch.stack(actions).to(self.device), rewards)
 
-            np.save("rewards.npy", np.array(ep_reward))
+        if self.log:
+            np.save(os.path.join(self.log_path, "ep_reward.npy"), np.array(ep_reward))
+            torch.save(self.mean_network.state_dict(), os.path.join(self.log_path, "mean_network.pt"))
+            torch.save(self.std_network.state_dict(), os.path.join(self.log_path, "std_network.pt"))
+                    
+
+
+
 
 
 

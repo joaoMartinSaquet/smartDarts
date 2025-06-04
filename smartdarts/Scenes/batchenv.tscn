@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://yrj24aht8740"]
+
+[ext_resource type="PackedScene" uid="uid://daplyo5gulfgr" path="res://Scenes/Game/game.tscn" id="1_r8v8k"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_tjhlp"]
+viewport_path = NodePath("subGame1")
+
+[node name="Batchenv" type="Node"]
+
+[node name="viewGame1" type="Sprite3D" parent="."]
+texture = SubResource("ViewportTexture_tjhlp")
+
+[node name="subGame1" type="SubViewport" parent="."]
+
+[node name="Game" parent="subGame1" instance=ExtResource("1_r8v8k")]
+
+[node name="viewGame2" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.999548, 0.03005, 0, -0.03005, 0.999548, 6, 0, 0)
+texture = SubResource("ViewportTexture_tjhlp")
+
+[node name="subGame2" type="SubViewport" parent="."]
+
+[node name="Game" parent="subGame2" instance=ExtResource("1_r8v8k")]
+
+[node name="viewGame3" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.999548, 0.03005, 0, -0.03005, 0.999548, 12, 0, 0)
+texture = SubResource("ViewportTexture_tjhlp")
+
+[node name="subGame3" type="SubViewport" parent="."]
+
+[node name="Game" parent="subGame3" instance=ExtResource("1_r8v8k")]
