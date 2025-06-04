@@ -7,6 +7,9 @@ from godot_rl.core.godot_env import GodotEnv
 import sys
 import os
 import time
+import json
+
+
 
 from deep_stuff import networks
 from user_simulator import *
@@ -70,19 +73,20 @@ class ReinforceCorrector(Corrector):
         self.log = log
         self.log_path = "logs_corrector/Reinforce/" + time.strftime("%Y%m%d-%H%M%S") 
         if not os.path.exists(self.log_path) and self.log:
+            print("creating log folder at : ", self.log_path)
             os.makedirs(self.log_path)
 
         # algorithm hyperparameters
         self.gamma = 0.99  # Discount factor
         self.learning_rate = 0.01
-        self.num_episodes = 1
+        self.num_episodes = 50
         self.batch_size = 64
 
         self.seed = 0
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.mean_network = networks(n_input = 2, n_output = 2, layers = [16, 16]).to(self.device)
-        self.std_network = networks(n_input = 2, n_output = 2, layers = [16, 16]).to(self.device)
+        self.mean_network = networks(n_input = 2, n_output = 2, layers = [32, 32]).to(self.device)
+        self.std_network = networks(n_input = 2, n_output = 2, layers = [32, 32]).to(self.device)
 
         self.optimizer = optim.Adam(list(self.mean_network.parameters()) + list(self.std_network.parameters()), lr=self.learning_rate)
         # self.criterion = nn.MSELoss()
@@ -184,7 +188,6 @@ class ReinforceCorrector(Corrector):
                     print("max steps reached : ", t)
 
                 if episode == self.num_episodes - 1:
-                    print("Logging last episode")
                     game_obs.append(obs)
                     u_sim_out.append(move_action)
                     model_out.append(corrector_action)
@@ -198,6 +201,9 @@ class ReinforceCorrector(Corrector):
             self.train_step(torch.stack(states).to(self.device), torch.stack(actions).to(self.device), rewards)
 
         if self.log:
+            print("loging training to : ", self.log_path)
+            logs = {"obs" : np.array(game_obs), "u_sim" : np.array(u_sim_out), "model" : np.array(model_out)}
+            json.dump(logs, open(os.path.join(self.log_path, "logs.json"), "w"))    
             np.save(os.path.join(self.log_path, "ep_reward.npy"), np.array(ep_reward))
             torch.save(self.mean_network.state_dict(), os.path.join(self.log_path, "mean_network.pt"))
             torch.save(self.std_network.state_dict(), os.path.join(self.log_path, "std_network.pt"))
@@ -229,7 +235,7 @@ if __name__ == "__main__":
     
     u_sim = VITE_USim([0, 0])
 
-    corr = ReinforceCorrector(env, u_sim)
+    corr = ReinforceCorrector(env, u_sim, learn = True, log = True)
     # corr.training_loop(Corrector)
     corr.training_loop()
 
