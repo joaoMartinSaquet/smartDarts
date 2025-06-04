@@ -79,7 +79,7 @@ class ReinforceCorrector(Corrector):
         # algorithm hyperparameters
         self.gamma = 0.99  # Discount factor
         self.learning_rate = 0.01
-        self.num_episodes = 50
+        self.num_episodes = 1
         self.batch_size = 64
 
         self.seed = 0
@@ -190,7 +190,7 @@ class ReinforceCorrector(Corrector):
                 if episode == self.num_episodes - 1:
                     game_obs.append(obs)
                     u_sim_out.append(move_action)
-                    model_out.append(corrector_action)
+                    model_out.append(corrector_action.cpu().numpy())
 
                     
             # print("done ! episode : ",episode)
@@ -202,7 +202,7 @@ class ReinforceCorrector(Corrector):
 
         if self.log:
             print("loging training to : ", self.log_path)
-            logs = {"obs" : np.array(game_obs), "u_sim" : np.array(u_sim_out), "model" : np.array(model_out)}
+            logs = {"obs" : np.array(game_obs).tolist(), "u_sim" : np.array(u_sim_out).tolist(), "model" : np.array(model_out).tolist()}
             json.dump(logs, open(os.path.join(self.log_path, "logs.json"), "w"))    
             np.save(os.path.join(self.log_path, "ep_reward.npy"), np.array(ep_reward))
             torch.save(self.mean_network.state_dict(), os.path.join(self.log_path, "mean_network.pt"))
