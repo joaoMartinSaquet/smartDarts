@@ -24,6 +24,3 @@ shape = SubResource("CircleShape2D_pfr1p")
 
 [node name="AIController2D" type="Node2D" parent="."]
 script = ExtResource("3_6xolu")
-
-[node name="aliveTimer" type="Timer" parent="."]
-process_callback = 0

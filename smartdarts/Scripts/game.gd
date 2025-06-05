@@ -11,9 +11,11 @@ var reward_gathered = 0
 
 var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
-var window_size = Vector2(0,0)
 var time_to_reach_target = 0
 var speedup = 0
+var game_size : Vector2
+
+
 signal hitted
 signal missed 
 
@@ -31,22 +33,25 @@ func save_game():
 func _ready() -> void:
 	
 	# test no rendering env 
-	RenderingServer.render_loop_enabled = false
-	
+	#RenderingServer.render_loop_enabled = false
+	print("ready game ")
 	Input.use_accumulated_input = false
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
-	speedup = $Sync.speed_up
+	#speedup = $Sync.speed_up
+	speedup = 1
+	game_size = Vector2($GameArea.mesh.size.x, $GameArea.mesh.size.y)
 	start_episode()
 	
 func _process(delta: float) -> void:
 	time_to_reach_target += delta
+	#print($Player.position)
 
 	
 func start_episode():
-	window_size = get_viewport().size
-	var y_target_iter =  (window_size.x) / (targets_column + 1)
-	var x_target_iter =  (window_size.y) / (targets_row  + 1 )
+	
+	var y_target_iter =  (game_size.x) / (targets_column + 1)
+	var x_target_iter =  (game_size.y) / (targets_row  + 1 )
 	set_player_hit_and_target_num()
 	for i in range(targets_column):
 		for j in range(targets_column):
@@ -57,6 +62,8 @@ func start_episode():
 	$Target.spawn(target_pose)
 	spawn_player(true)
 	$Player.target_position = target_pose
+	print("target pose ", $Target.position)
+	print("player pose ", $Player.position)
 	
 		
 func _on_player_hit() -> void:
@@ -87,11 +94,12 @@ func _on_target_player_out() -> void:
 	player_in = false # Replace with function body.
 
 func spawn_player(start): 
-	var start_position = Vector2(randi_range(0, window_size.x - 50), randi_range(0, window_size.y - 50))
+	var start_position = Vector2(randi_range(0, game_size.x - 50), randi_range(0, game_size.y - 50))
+	print("starting position at spawn" , start_position)
 	#print("ar we wtarting ? ", start)
 	set_player_hit_and_target_num()
 	if $Player.ai_controller.heuristic == "human":
-		Input.warp_mouse(start_position)
+		#Input.warp_mouse(start_position)
 		$Player.start(start_position)
 		if start:
 			$Player.start(start_position)

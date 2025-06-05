@@ -52,7 +52,7 @@ func _input(event: InputEvent) -> void:
 			clicks.append(true)
 			hit.emit() 
 		if event is InputEventMouseMotion:
-				#print("time : ", Time.get_ticks_msec())
+			#print("time : ", Time.get_ticks_msec())
 			var disp = event.position - position
 			position = event.position
 			poss_x.append(position.x)

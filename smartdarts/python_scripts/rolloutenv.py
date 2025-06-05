@@ -1,6 +1,8 @@
 from godot_rl.core.godot_env import GodotEnv
 from gymnasium import spaces
 import numpy as np
+import tqdm
+
 from user_simulator import *
 from perturbation import *
 from corrector import *
@@ -47,10 +49,9 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
     perturbator = pertubator
     reward_list = []
     # rolling out env
-    for i in range(Nstep):
+    for i in tqdm(range(Nstep)):
         # get controller actions and process it (clamp, norm, pert, etc...)
         obs = np.array(observation[0]["obs"])
-
         move_action, click_action = u_simulator.step(obs[:2], obs[2:])
 
         # add perturbation if there is any
@@ -62,7 +63,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
 
 
         # clamp action to don't have to big displacement
-        move_action = np.clip(move_action, -MAX_DISP, MAX_DISP)
+        move_action = np.clip(move_action, -MAX_DISP, MAX_DISP) 
 
         # contruct msg to be send to the env
         action = np.insert(move_action, 0 , click_action)
@@ -71,7 +72,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
         # step the env
         # print("action sended at step {i}, action = {action}".format(i = i, action = action))
         observation, reward, done, info, _ = env.step(action)
-
+        # print("observations = ", observation)
         # update reward list
         reward_list.append(reward)
 
@@ -102,7 +103,7 @@ if __name__ == "__main__":
 
     # Initialize the environment
     env = GodotEnv(convert_action_space=True)
-
+    print(env.num_envs)
 
     for j in range(N):
         print("ep : ", j)

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://yrj24aht8740"]
+[gd_scene load_steps=4 format=3 uid="uid://yrj24aht8740"]
 
 [ext_resource type="PackedScene" uid="uid://daplyo5gulfgr" path="res://Scenes/Game/game.tscn" id="1_r8v8k"]
+[ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="2_olj55"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_tjhlp"]
 viewport_path = NodePath("subGame1")
@@ -12,7 +13,7 @@ texture = SubResource("ViewportTexture_tjhlp")
 
 [node name="subGame1" type="SubViewport" parent="."]
 
-[node name="Game" parent="subGame1" instance=ExtResource("1_r8v8k")]
+[node name="Game1" parent="subGame1" instance=ExtResource("1_r8v8k")]
 
 [node name="viewGame2" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999548, 0.03005, 0, -0.03005, 0.999548, 6, 0, 0)
@@ -20,7 +21,7 @@ texture = SubResource("ViewportTexture_tjhlp")
 
 [node name="subGame2" type="SubViewport" parent="."]
 
-[node name="Game" parent="subGame2" instance=ExtResource("1_r8v8k")]
+[node name="Game2" parent="subGame2" instance=ExtResource("1_r8v8k")]
 
 [node name="viewGame3" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999548, 0.03005, 0, -0.03005, 0.999548, 12, 0, 0)
@@ -28,4 +29,12 @@ texture = SubResource("ViewportTexture_tjhlp")
 
 [node name="subGame3" type="SubViewport" parent="."]
 
-[node name="Game" parent="subGame3" instance=ExtResource("1_r8v8k")]
+[node name="Game3" parent="subGame3" instance=ExtResource("1_r8v8k")]
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("2_olj55")
+action_repeat = 1
+metadata/_custom_type_script = "uid://bvvicuis6vyx2"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.21773, 0.0327854, 8.28567)
