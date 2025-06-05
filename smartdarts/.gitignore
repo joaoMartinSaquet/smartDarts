@@ -17,6 +17,8 @@ mono_crash.*.json
 
 # logs 
 logs/
+*.pt
+*.json
 
 # video 
 video/
