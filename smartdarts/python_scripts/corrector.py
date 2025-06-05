@@ -8,12 +8,14 @@ import sys
 import os
 import time
 import json
+from tqdm import tqdm
 
 
 
 from deep_stuff import networks
 from user_simulator import *
 from perturbation import *
+from rolloutenv import *
 
 # steps where we say, that's enough reset yourselves
 MAXSTEPS =int(1e6)
@@ -68,7 +70,7 @@ class ReinforceCorrector(Corrector):
     ''' 
         Inpired from : https://www.geeksforgeeks.org/reinforce-algorithm/ 
     '''
-    def __init__(self, env : GodotEnv, u_sim : UserSimulator, learn = False, log = False):
+    def __init__(self, env : GodotEnv, u_sim : UserSimulator, perturbator : Perturbator = None, learn = False, log = False):
         super().__init__(learn)
         self.log = log
         self.log_path = "logs_corrector/Reinforce/" + time.strftime("%Y%m%d-%H%M%S") 
@@ -79,7 +81,7 @@ class ReinforceCorrector(Corrector):
         # algorithm hyperparameters
         self.gamma = 0.99  # Discount factor
         self.learning_rate = 0.01
-        self.num_episodes = 1
+        self.num_episodes = 50
         self.batch_size = 64
 
         self.seed = 0
@@ -94,6 +96,8 @@ class ReinforceCorrector(Corrector):
         # it s a godot env !
         self.env = env 
         self.u_sim = u_sim
+
+        self.perturbator = perturbator
 
 
     def compute_return(self, rewards): 
@@ -155,6 +159,9 @@ class ReinforceCorrector(Corrector):
                 # get simulator movements 
                 move_action, click_action = self.u_sim.step(obs[:2], obs[2:])
 
+                # pertubate the movement if there is any perturbation
+                if self.perturbator is not None:
+                    move_action = self.perturbator(np.array(move_action))
                 state = torch.tensor(move_action, dtype=torch.float32).to(self.device)
                 means = self.mean_network(state)
                 log_stds = self.std_network(state)
@@ -209,7 +216,29 @@ class ReinforceCorrector(Corrector):
             torch.save(self.std_network.state_dict(), os.path.join(self.log_path, "std_network.pt"))
                     
 
+class CartesianGeneticCorrector(Corrector):
 
+    def __init__(self, env : GodotEnv, u_sim : UserSimulator, perturbator : Perturbator = None, learn = False, log = False):
+        super().__init__(env, u_sim, perturbator, learn, log)
+        self.log = log
+        self.log_path = "logs_corrector/CGP/" + time.strftime("%Y%m%d-%H%M%S") 
+        if not os.path.exists(self.log_path) and self.log:
+            print("creating log folder at : ", self.log_path)
+            os.makedirs(self.log_path)
+        
+        self.env = env 
+        self.u_sim = u_sim
+        self.perturbator = perturbator
+
+    def fitness_function(self, individual):
+        
+        # rollout the env with the individual
+        # return the reward
+        # return the reward
+        reward = rolloutSmartDartEnv(self.env, MAXSTEPS, self.perturbator, corrector = individual)
+        return reward
+        
+        
 
 
 
@@ -235,7 +264,7 @@ if __name__ == "__main__":
     
     u_sim = VITE_USim([0, 0])
 
-    corr = ReinforceCorrector(env, u_sim, learn = True, log = True)
+    corr = ReinforceCorrector(env, u_sim, perturbator, learn = True, log = True)
     # corr.training_loop(Corrector)
     corr.training_loop()
 

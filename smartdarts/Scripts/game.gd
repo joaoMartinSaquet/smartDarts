@@ -28,6 +28,10 @@ func save_game():
 	saving_file.close()
 	
 func _ready() -> void:
+	
+	# test no rendering env 
+	RenderingServer.render_loop_enabled = false
+	
 	Input.use_accumulated_input = false
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED

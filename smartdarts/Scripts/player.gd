@@ -68,9 +68,15 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	time.append(delta + time[0])
 	var window_size = get_viewport().size
+	#print("windows size ?", window_size)
+	#print("player position ? ", position)
 	if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
-		#print("reset cause out of bonds")
-		ai_controller.reward += -0.01
+		#print("out of bonds")
+		if RenderingServer.render_loop_enabled != true:
+				ai_controller.reward += -0.0001
+		else:
+			ai_controller.reward += -0.01
+		#ai_controller.reward += 0.0		
 		#ai_controller.done = true
 		#ai_controller.needs_reset = true
 		#reset_game.emit()

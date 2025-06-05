@@ -69,13 +69,13 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
         action = np.array([ action for _ in range(env.num_envs) ])
 
         # step the env
-        print("action sended at step {i}, action = {action}".format(i = i, action = action))
+        # print("action sended at step {i}, action = {action}".format(i = i, action = action))
         observation, reward, done, info, _ = env.step(action)
 
         # print("done , reward = ", done, reward)
         # see how to do this with several env 
         if any(done):
-            print("done")
+            # print("done")
             break
 
         # update reward list
