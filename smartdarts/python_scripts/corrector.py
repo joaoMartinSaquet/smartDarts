@@ -136,8 +136,9 @@ class ReinforceCorrector(Corrector):
     def training_loop(self):
 
         ep_reward = []
-
-        for episode in range(self.num_episodes):
+        reward_log = 0
+        for episode in tqdm(range(self.num_episodes), desc = "Training Reinforce ep {}/{} : reward {}".format(episode, self.num_episode,             reward_log = np.sum(rewards)
+)):
 
             if episode == self.num_episodes - 1:
                 game_obs = []
@@ -202,11 +203,11 @@ class ReinforceCorrector(Corrector):
                     
             # print("done ! episode : ",episode)
 
-            print("rewards summ at ep ", episode, " : ", np.sum(rewards))
+            print("rewards summ at ep ", episode, " : ", )
             ep_reward.append(np.sum(rewards))
 
             self.train_step(torch.stack(states).to(self.device), torch.stack(actions).to(self.device), rewards)
-
+            reward_log = np.sum(rewards)
         if self.log:
             print("loging training to : ", self.log_path)
             logs = {"obs" : np.array(game_obs).tolist(), "u_sim" : np.array(u_sim_out).tolist(), "model" : np.array(model_out).tolist()}
@@ -235,8 +236,9 @@ class CartesianGeneticCorrector(Corrector):
         # rollout the env with the individual
         # return the reward
         # return the reward
-        reward = rolloutSmartDartEnv(self.env, MAXSTEPS, self.perturbator, corrector = individual)
-        return reward
+        cum_reward, _ = rolloutSmartDartEnv(self.env, MAXSTEPS, self.perturbator, corrector = individual)
+        
+        return cum_reward[-1]
         
         
 
