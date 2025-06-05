@@ -71,11 +71,10 @@ func _process(delta: float) -> void:
 	#print("windows size ?", window_size)
 	#print("player position ? ", position)
 	if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
-		#print("out of bonds")
 		if RenderingServer.render_loop_enabled != true:
-				ai_controller.reward += -0.0001
+				ai_controller.reward += -delta
 		else:
-			ai_controller.reward += -0.01
+			ai_controller.reward += -delta
 		#ai_controller.reward += 0.0		
 		#ai_controller.done = true
 		#ai_controller.needs_reset = true
@@ -88,14 +87,14 @@ func _physics_process(_delta: float) -> void:
 	if ai_controller.needs_reset and ai_controller.heuristic != "human":
 		ai_controller.reset()
 		reset_game.emit()
-
 	#print("ai controller in player script",  ai_controller.heuristic)
 	if ai_controller.heuristic == "human":
 		pass # in this case this one is made by eery time an input is detected
 	else:
 		if ai_controller.click_action:
-				hit.emit()
-				clicks.append(true)
+			#print("AI is clicking bro")
+			hit.emit()
+			clicks.append(true)
 		else: 
 			clicks.append(false)
 		movement = ai_controller.move_action

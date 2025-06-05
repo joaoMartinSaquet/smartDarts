@@ -13,6 +13,7 @@ var number_of_hit = 0 # number of hit for a target
 var N_HIT_MAX = 5 # to tune 
 var window_size = Vector2(0,0)
 var time_to_reach_target = 0
+var speedup = 0
 signal hitted
 signal missed 
 
@@ -35,11 +36,12 @@ func _ready() -> void:
 	Input.use_accumulated_input = false
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
+	speedup = $Sync.speed_up
 	start_episode()
 	
 func _process(delta: float) -> void:
-	time_to_reach_target += 1 
-	
+	time_to_reach_target += delta
+
 	
 func start_episode():
 	window_size = get_viewport().size
@@ -59,7 +61,7 @@ func start_episode():
 		
 func _on_player_hit() -> void:
 	var start_episode : bool
-	
+	var player_in = $Player.position.distance_to($Target.position) <= $Target.radius
 	if player_in: 
 		number_of_hit += 1 
 		hitted.emit()
@@ -101,11 +103,10 @@ func spawn_player(start):
 
 func _on_hitted() -> void:
 	
-	print("hitted n : ",number_of_hit)
-	if $Player.ai_controller.heuristic != "human":
-		time_to_reach_target *= 0.064 # Speedup x dt ( 8 * 0.008)
-	else:
-		time_to_reach_target *= 0.008
+	
+	if $Player.ai_controller.heuristic == "human":
+		time_to_reach_target /= speedup # because of the sync speed up
+
 	$Player.ai_controller.reward += exp(-0.1*time_to_reach_target)
 	reward_gathered += exp(-0.1*time_to_reach_target) 
 	time_to_reach_target = 0

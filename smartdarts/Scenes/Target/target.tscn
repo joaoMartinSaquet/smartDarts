@@ -18,14 +18,16 @@ texture = ExtResource("2_jd5eg")
 
 [node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
 
-[node name="Area2D" type="Area2D" parent="."]
+[node name="TargetArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+input_pickable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetArea"]
 shape = SubResource("CircleShape2D_wddmv")
 one_way_collision_margin = 0.0
 
 [connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]
-[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
-[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="area_entered" from="TargetArea" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="TargetArea" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="TargetArea" to="." method="_on_area_2d_body_exited"]
+[connection signal="mouse_entered" from="TargetArea" to="." method="_on_area_2d_mouse_entered"]

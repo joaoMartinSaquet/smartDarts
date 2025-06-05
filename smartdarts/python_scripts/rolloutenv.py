@@ -63,7 +63,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
 
         # clamp action to don't have to big displacement
         move_action = np.clip(move_action, -MAX_DISP, MAX_DISP)
-        
+
         # contruct msg to be send to the env
         action = np.insert(move_action, 0 , click_action)
         action = np.array([ action for _ in range(env.num_envs) ])
@@ -72,14 +72,15 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
         # print("action sended at step {i}, action = {action}".format(i = i, action = action))
         observation, reward, done, info, _ = env.step(action)
 
+        # update reward list
+        reward_list.append(reward)
+
+
         # print("done , reward = ", done, reward)
         # see how to do this with several env 
         if any(done):
             # print("done")
             break
-
-        # update reward list
-        reward_list.append(reward)
 
     return np.cumsum(reward_list), reward_list
 
