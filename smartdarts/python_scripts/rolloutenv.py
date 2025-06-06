@@ -49,7 +49,7 @@ def rolloutSmartDartEnv(env, Nstep, pertubator : Perturbator, corrector = None, 
     perturbator = pertubator
     reward_list = []
     # rolling out env
-    for i in tqdm(range(Nstep)):
+    for i in tqdm.tqdm(range(Nstep)):
         # get controller actions and process it (clamp, norm, pert, etc...)
         obs = np.array(observation[0]["obs"])
         move_action, click_action = u_simulator.step(obs[:2], obs[2:])
