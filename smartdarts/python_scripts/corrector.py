@@ -8,8 +8,7 @@ import sys
 import os
 import time
 import json
-from tqdm import tqdm
-
+import tqdm
 
 
 from deep_stuff import networks
@@ -67,37 +66,71 @@ class LowPassCorrector(Corrector):
 
         
 class ReinforceCorrector(Corrector):
-    ''' 
-        Inpired from : https://www.geeksforgeeks.org/reinforce-algorithm/ 
-    '''
+    """
+    A reinforcement learning-based corrector that uses the REINFORCE algorithm to learn
+    optimal correction actions for user inputs in a smart darts environment.
+    
+    This class implements a policy gradient method that learns to correct user movements
+    by training neural networks to predict both the mean and standard deviation of
+    correction actions. The algorithm uses the REINFORCE policy gradient method to
+    optimize the policy based on received rewards.
+    
+    Inspired from: https://www.geeksforgeeks.org/reinforce-algorithm/
+    
+    Attributes:
+        gamma (float): Discount factor for future rewards (0.99)
+        learning_rate (float): Learning rate for the optimizer (0.01)
+        num_episodes (int): Number of training episodes (50)
+        batch_size (int): Batch size for training (64)
+        mean_network (nn.Module): Neural network that predicts mean correction actions
+        std_network (nn.Module): Neural network that predicts standard deviation of actions
+        optimizer (torch.optim.Adam): Optimizer for training both networks
+        env (GodotEnv): The Godot environment for simulation
+        u_sim (UserSimulator): User simulator for generating user actions
+        perturbator (Perturbator): Optional perturbation module for adding noise
+    """
     def __init__(self, env : GodotEnv, u_sim : UserSimulator, perturbator : Perturbator = None, learn = False, log = False):
+        """
+        Initialize the ReinforceCorrector with environment, user simulator, and training parameters.
+        
+        Args:
+            env (GodotEnv): The Godot environment for running simulations
+            u_sim (UserSimulator): User simulator for generating user movement actions
+            perturbator (Perturbator, optional): Module to add perturbations to user actions. Defaults to None.
+            learn (bool, optional): Whether the corrector is in learning mode. Defaults to False.
+            log (bool, optional): Whether to enable logging of training data. Defaults to False.
+        """
         super().__init__(learn)
+        # Logging configuration
         self.log = log
         self.log_path = "logs_corrector/Reinforce/" + time.strftime("%Y%m%d-%H%M%S") 
         if not os.path.exists(self.log_path) and self.log:
             print("creating log folder at : ", self.log_path)
             os.makedirs(self.log_path)
 
-        # algorithm hyperparameters
-        self.gamma = 0.99  # Discount factor
-        self.learning_rate = 0.01
-        self.num_episodes = 50
-        self.batch_size = 64
+        # REINFORCE algorithm hyperparameters
+        self.gamma = 0.99  # Discount factor for computing returns
+        self.learning_rate = 0.01  # Learning rate for neural network optimization
+        self.num_episodes = 50  # Number of training episodes
+        self.batch_size = 64  # Batch size (currently not used in implementation)
 
+        # Training configuration
         self.seed = 0
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+        # Neural networks for policy representation
+        # Mean network: outputs the mean of the action distribution
         self.mean_network = networks(n_input = 2, n_output = 2, layers = [32, 32]).to(self.device)
+        # Standard deviation network: outputs log std dev of the action distribution
         self.std_network = networks(n_input = 2, n_output = 2, layers = [32, 32]).to(self.device)
 
+        # Optimizer for both networks (combined parameter list)
         self.optimizer = optim.Adam(list(self.mean_network.parameters()) + list(self.std_network.parameters()), lr=self.learning_rate)
-        # self.criterion = nn.MSELoss()
 
-        # it s a godot env !
-        self.env = env 
-        self.u_sim = u_sim
-
-        self.perturbator = perturbator
+        # Environment and simulation components
+        self.env = env  # Godot environment for smart darts simulation
+        self.u_sim = u_sim  # User simulator for generating human-like movements
+        self.perturbator = perturbator  # Optional noise/perturbation module
 
 
     def compute_return(self, rewards): 
@@ -137,8 +170,8 @@ class ReinforceCorrector(Corrector):
 
         ep_reward = []
         reward_log = 0
-        for episode in tqdm(range(self.num_episodes), desc = "Training Reinforce ep {}/{} : reward {}".format(episode, self.num_episode,             reward_log = np.sum(rewards)
-)):
+        episode = 0
+        for episode in tqdm.tqdm(range(self.num_episodes), desc = "Training Reinforce ep {}/{} : reward {}".format(episode, self.num_episodes, reward_log)):
 
             if episode == self.num_episodes - 1:
                 game_obs = []
