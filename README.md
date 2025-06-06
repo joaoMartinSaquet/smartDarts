@@ -71,10 +71,11 @@ SmartDarts is a learning environment that simulates dart-throwing scenarios wher
 # Navigate to the Python scripts directory
 cd smartdarts/python_scripts
 
-# Start training with default REINFORCE algorithm
+# Start training with default REINFORCE algorithm 
 python corrector.py
 ```
 
+*** Has not been tested on MultiEnv ***
 ### Using the Python API
 
 ```python

@@ -99,7 +99,7 @@ func spawn_player(start):
 	#print("ar we wtarting ? ", start)
 	set_player_hit_and_target_num()
 	if $Player.ai_controller.heuristic == "human":
-		#Input.warp_mouse(start_position)
+		Input.warp_mouse(start_position)
 		$Player.start(start_position)
 		if start:
 			$Player.start(start_position)

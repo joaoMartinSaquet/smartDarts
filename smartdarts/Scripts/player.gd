@@ -35,10 +35,8 @@ func _ready() -> void:
 	ai_controller.init(self)
 	ai_controller.reset_after = 1e4
 	ai_controller.reward = 0
-	print("Player starting positions ! 	", position)
-	
+		
 func game_over():
-	print("player game over ! ")
 	if ai_controller.heuristic == "human":
 		hide()
 	ai_controller.done = true

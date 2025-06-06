@@ -1,35 +1,41 @@
-[gd_scene load_steps=4 format=3 uid="uid://yrj24aht8740"]
+[gd_scene load_steps=13 format=3 uid="uid://yrj24aht8740"]
 
 [ext_resource type="PackedScene" uid="uid://daplyo5gulfgr" path="res://Scenes/Game/game.tscn" id="1_r8v8k"]
 [ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="2_olj55"]
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_tjhlp"]
-viewport_path = NodePath("subGame1")
+[sub_resource type="ViewportTexture" id="ViewportTexture_olj55"]
+viewport_path = NodePath("SubViewport1")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_jiv3w"]
+viewport_path = NodePath("SubViewport2")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_pogue"]
+viewport_path = NodePath("SubViewport3")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_myydu"]
+viewport_path = NodePath("SubViewport4")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_rskk3"]
+viewport_path = NodePath("SubViewport5")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_mhmk5"]
+viewport_path = NodePath("SubViewport6")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jiv3w"]
+albedo_color = Color(0.462745, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_olj55"]
+material = SubResource("StandardMaterial3D_jiv3w")
+size = Vector3(100, 200, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_olj55"]
+albedo_color = Color(0.603922, 0.709804, 0.631373, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jiv3w"]
+material = SubResource("StandardMaterial3D_olj55")
+size = Vector3(100, 1, 100)
 
 [node name="Batchenv" type="Node"]
-
-[node name="viewGame1" type="Sprite3D" parent="."]
-texture = SubResource("ViewportTexture_tjhlp")
-
-[node name="subGame1" type="SubViewport" parent="."]
-
-[node name="Game1" parent="subGame1" instance=ExtResource("1_r8v8k")]
-
-[node name="viewGame2" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999548, 0.03005, 0, -0.03005, 0.999548, 6, 0, 0)
-texture = SubResource("ViewportTexture_tjhlp")
-
-[node name="subGame2" type="SubViewport" parent="."]
-
-[node name="Game2" parent="subGame2" instance=ExtResource("1_r8v8k")]
-
-[node name="viewGame3" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.999548, 0.03005, 0, -0.03005, 0.999548, 12, 0, 0)
-texture = SubResource("ViewportTexture_tjhlp")
-
-[node name="subGame3" type="SubViewport" parent="."]
-
-[node name="Game3" parent="subGame3" instance=ExtResource("1_r8v8k")]
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_olj55")
@@ -37,4 +43,82 @@ action_repeat = 1
 metadata/_custom_type_script = "uid://bvvicuis6vyx2"
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.21773, 0.0327854, 8.28567)
+transform = Transform3D(0.999989, 0.00476473, 0, -0.00476473, 0.999989, 0, 0, 0, 1, 10.114, 11.32, 21.0111)
+keep_aspect = 0
+fov = 117.142
+
+[node name="TrainingSprite1" type="Sprite3D" parent="."]
+texture = SubResource("ViewportTexture_olj55")
+
+[node name="SubViewport1" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Game1" parent="SubViewport1" instance=ExtResource("1_r8v8k")]
+
+[node name="TrainingSprite2" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2183, 0, 0)
+texture = SubResource("ViewportTexture_jiv3w")
+
+[node name="SubViewport2" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Game2" parent="SubViewport2" instance=ExtResource("1_r8v8k")]
+
+[node name="SubViewport3" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Game3" parent="SubViewport3" instance=ExtResource("1_r8v8k")]
+
+[node name="TrainingSprite3" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.3198, 0)
+texture = SubResource("ViewportTexture_pogue")
+
+[node name="SubViewport4" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Game4" parent="SubViewport4" instance=ExtResource("1_r8v8k")]
+
+[node name="TrainingSprite4" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.2183, 11.3198, 0)
+texture = SubResource("ViewportTexture_myydu")
+
+[node name="TrainingSprite5" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 22.64, 0)
+texture = SubResource("ViewportTexture_rskk3")
+
+[node name="SubViewport5" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Game5" parent="SubViewport5" instance=ExtResource("1_r8v8k")]
+
+[node name="SubViewport6" type="SubViewport" parent="."]
+size = Vector2i(1920, 1080)
+
+[node name="Game6" parent="SubViewport6" instance=ExtResource("1_r8v8k")]
+
+[node name="TrainingSprite6" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.218, 22.64, 0)
+texture = SubResource("ViewportTexture_mhmk5")
+
+[node name="Wall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.64452, 19.2095, -25.38)
+mesh = SubResource("BoxMesh_olj55")
+
+[node name="Wall" type="MeshInstance3D" parent="Wall"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 49.5363, -2.91231, 42.9167)
+mesh = SubResource("BoxMesh_olj55")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.32, -10.457, 15.391)
+mesh = SubResource("BoxMesh_jiv3w")
+
+[node name="Wall2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -44.5825, 19.0956, 15.3044)
+mesh = SubResource("BoxMesh_olj55")
+skeleton = NodePath("../Wall")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.542352, -0.787893, -0.291685, 0.780365, 0.343796, 0.522336, -0.311265, -0.51091, 0.801302, -0.489437, 52.884, 101.813)
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.211309, -0.549165, 0.808558, -0.520245, -0.763514, -0.382611, 0.827462, -0.3398, -0.447038, -104.797, 78.4315, 136.31)
