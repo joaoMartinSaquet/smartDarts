@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://yrj24aht8740"]
+[gd_scene load_steps=13 format=3 uid="uid://dp3fdhccakvr8"]
 
 [ext_resource type="PackedScene" uid="uid://daplyo5gulfgr" path="res://Scenes/Game/game.tscn" id="1_r8v8k"]
 [ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="2_olj55"]

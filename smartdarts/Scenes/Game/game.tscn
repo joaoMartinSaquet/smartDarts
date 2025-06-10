@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://daplyo5gulfgr"]
+[gd_scene load_steps=7 format=3 uid="uid://daplyo5gulfgr"]
 
 [ext_resource type="Script" uid="uid://dalofputfsq8q" path="res://Scripts/game.gd" id="1_ciybh"]
 [ext_resource type="PackedScene" uid="uid://b78itctx0y0pn" path="res://Scenes/Player/player.tscn" id="2_flgk0"]
 [ext_resource type="PackedScene" uid="uid://q2l3q8mxk0pr" path="res://Scenes/Target/target.tscn" id="3_vifcx"]
+[ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="4_i1e5p"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_qikps"]
 lightmap_size_hint = Vector2i(-4, 0)
@@ -37,6 +38,11 @@ mesh = SubResource("BoxMesh_qikps")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GameArea/StaticBody2D"]
 visible = false
 shape = SubResource("RectangleShape2D_i1e5p")
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("4_i1e5p")
+action_repeat = 1
+metadata/_custom_type_script = "uid://bvvicuis6vyx2"
 
 [connection signal="hitted" from="." to="." method="_on_hitted"]
 [connection signal="missed" from="." to="." method="_on_missed"]
