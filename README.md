@@ -59,7 +59,7 @@ SmartDarts is a learning environment that simulates dart-throwing scenarios wher
 
 4. **Verify installation**:
    ```bash
-   cd smartdarts/python_scripts
+   cd python_scripts
    python corrector.py --help
    ```
 
@@ -69,7 +69,7 @@ SmartDarts is a learning environment that simulates dart-throwing scenarios wher
 
 ```bash
 # Navigate to the Python scripts directory
-cd smartdarts/python_scripts
+cd python_scripts
 
 # Start training with default REINFORCE algorithm 
 python corrector.py
@@ -96,7 +96,7 @@ corrector.train()
 
 ### Human Player Mode
 
-1. Open the Godot project in `smartdarts/`
+1. Open the Godot project in the root directory
 2. Run the scene to start human player mode
 3. Use your mouse to control the dart and hit targets
 
@@ -104,23 +104,25 @@ corrector.train()
 
 ```
 smartDarts/
-├── images/                     # Documentation images
-├── requirement.txt            # Python dependencies
-├── README.md                 # This file
-└── smartdarts/               # Main project directory
-    ├── addons/               # Godot RL agents addon
-    ├── art/                  # Game assets (sprites, textures)
-    ├── jupyter/              # Analysis notebooks
-    ├── logs/                 # Training and performance logs
-    ├── python_scripts/       # Python RL training scripts
-    │   ├── corrector.py      # Main training script
-    │   ├── deep_stuff.py     # Neural network definitions
-    │   ├── user_simulator.py # Human behavior simulation
-    │   ├── perturbation.py   # Data augmentation
-    │   └── rolloutenv.py     # Environment wrapper
-    ├── Scenes/               # Godot scene files
-    ├── Scripts/              # GDScript files
-    └── video/                # Recorded gameplay videos
+├── addons/                   # Godot RL agents addon
+├── art/                      # Game assets (sprites, textures)
+├── images/                   # Documentation images
+├── jupyter/                  # Analysis notebooks and visualizations
+│   ├── images/              # Generated plots and charts
+│   └── viz.ipynb           # Main visualization notebook
+├── logs/                     # Training and performance logs
+├── python_scripts/           # Python RL training scripts
+│   ├── corrector.py         # Main training script
+│   ├── deep_stuff.py        # Neural network definitions
+│   ├── user_simulator.py    # Human behavior simulation
+│   ├── perturbation.py      # Data augmentation
+│   ├── rolloutenv.py        # Environment wrapper
+│   └── logs_corrector/      # Training logs and saved models
+├── Scenes/                   # Godot scene files
+├── Scripts/                  # GDScript files
+├── video/                    # Recorded gameplay videos
+├── requirement.txt           # Python dependencies
+└── README.md                # This file
 ```
 
 ## 🔧 Configuration
@@ -140,13 +142,14 @@ smartDarts/
 ## 📊 Monitoring and Analysis
 
 ### Logs
-- Training logs are saved in `smartdarts/logs/`
+- Training logs are saved in `logs/` and `python_scripts/logs_corrector/`
 - Human gameplay logs for comparison studies
 - Performance metrics and trajectory data
 
 ### Visualization
-- Jupyter notebooks in `smartdarts/jupyter/` for data analysis
-- Video recordings of training progress in `smartdarts/video/`
+- Jupyter notebooks in `jupyter/` for data analysis
+- Generated plots and visualizations in `jupyter/images/`
+- Video recordings of training progress in `video/`
 - Real-time training monitoring through console output
 
 ## 🤝 Contributing
@@ -166,13 +169,13 @@ We welcome contributions! Please consider:
 
 ## 📄 License
 
-See the `LICENSE` file in the `smartdarts/` directory for license information.
+See the `LICENSE` file in the project directory for license information.
 
 ## 🆘 Support
 
 If you encounter issues:
 
-1. Check the logs in `smartdarts/logs/` for error messages
+1. Check the logs in `logs/` or `python_scripts/logs_corrector/` for error messages
 2. Verify your Python and Godot versions match the requirements
 3. Ensure all dependencies are properly installed
 4. Create an issue with detailed error descriptions and system information
