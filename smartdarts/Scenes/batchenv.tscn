@@ -1,7 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://dp3fdhccakvr8"]
+[gd_scene load_steps=12 format=3 uid="uid://dm331kr6c7sw2"]
 
 [ext_resource type="PackedScene" uid="uid://daplyo5gulfgr" path="res://Scenes/Game/game.tscn" id="1_r8v8k"]
-[ext_resource type="Script" uid="uid://bvvicuis6vyx2" path="res://addons/godot_rl_agents/sync.gd" id="2_olj55"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_olj55"]
 viewport_path = NodePath("SubViewport1")
@@ -36,11 +35,6 @@ material = SubResource("StandardMaterial3D_olj55")
 size = Vector3(100, 1, 100)
 
 [node name="Batchenv" type="Node"]
-
-[node name="Sync" type="Node" parent="."]
-script = ExtResource("2_olj55")
-action_repeat = 1
-metadata/_custom_type_script = "uid://bvvicuis6vyx2"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.999989, 0.00476473, 0, -0.00476473, 0.999989, 0, 0, 0, 1, 10.114, 11.32, 21.0111)

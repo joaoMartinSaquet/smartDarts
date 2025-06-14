@@ -14,7 +14,7 @@ var N_HIT_MAX = 5 # to tune
 var time_to_reach_target = 0
 var speedup = 0
 var game_size : Vector2
-
+var out_number = 0
 
 signal hitted
 signal missed 
@@ -34,18 +34,26 @@ func _ready() -> void:
 	
 	# test no rendering env 
 	#RenderingServer.render_loop_enabled = false
-	print("ready game ")
 	Input.use_accumulated_input = false
 	#Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	#Input.mouse_mode = Input.MOUSE_MODE_CONFINED
 	#speedup = $Sync.speed_up
-	speedup = 1
 	game_size = Vector2($GameArea.mesh.size.x, $GameArea.mesh.size.y)
 	start_episode()
 	
 func _process(delta: float) -> void:
 	time_to_reach_target += delta
+	if $Player.position.x > $GameArea.mesh.size.x or $Player.position.y > $GameArea.mesh.size.y :
+		
+		out_number += 1
+		if out_number > 100:
+			$Player.ai_controller.reward += -10
+			$Player.ai_controller.done = true
+
+		#print("i am out of area after reward: ", $Player.ai_controller.reward)
 	#print($Player.position)
+	else:
+		out_number = 0
 
 	
 func start_episode():
@@ -62,9 +70,7 @@ func start_episode():
 	$Target.spawn(target_pose)
 	spawn_player(true)
 	$Player.target_position = target_pose
-	print("target pose ", $Target.position)
-	print("player pose ", $Player.position)
-	
+
 		
 func _on_player_hit() -> void:
 	var start_episode : bool
@@ -95,7 +101,6 @@ func _on_target_player_out() -> void:
 
 func spawn_player(start): 
 	var start_position = Vector2(randi_range(0, game_size.x - 50), randi_range(0, game_size.y - 50))
-	print("starting position at spawn" , start_position)
 	#print("ar we wtarting ? ", start)
 	set_player_hit_and_target_num()
 	if $Player.ai_controller.heuristic == "human":

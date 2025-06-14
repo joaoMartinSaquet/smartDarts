@@ -7,7 +7,7 @@ var target_position = Vector2(0, 0)
 var MAX_DISPLACEMENT = 80	
 var over = false
 var reward = 0
-
+var game_area : Vector2
 var time = [0]
 
 var poss_x = []
@@ -65,14 +65,13 @@ func _input(event: InputEvent) -> void:
 		
 func _process(delta: float) -> void:
 	time.append(delta + time[0])
-	var window_size = get_viewport().size
+	#var window_size = get_viewport().size
 	#print("windows size ?", window_size)
 	#print("player position ? ", position)
-	if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
-		if RenderingServer.render_loop_enabled != true:
-				ai_controller.reward += -delta
-		else:
-			ai_controller.reward += -delta
+	#if position.x > window_size.x or position.x < 0 or  position.y > window_size.y or position.y < 0:
+		#ai_controller.reward += -delta
+		#print("i am here ! reward is ", ai_controller.reward)
+		#print("delta is ", delta)
 		#ai_controller.reward += 0.0		
 		#ai_controller.done = true
 		#ai_controller.needs_reset = true

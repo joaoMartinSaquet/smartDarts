@@ -36,12 +36,12 @@ mesh = SubResource("BoxMesh_qikps")
 [node name="StaticBody2D" type="StaticBody2D" parent="GameArea"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GameArea/StaticBody2D"]
-visible = false
 shape = SubResource("RectangleShape2D_i1e5p")
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_i1e5p")
 action_repeat = 1
+speed_up = 8.0
 metadata/_custom_type_script = "uid://bvvicuis6vyx2"
 
 [connection signal="hitted" from="." to="." method="_on_hitted"]
