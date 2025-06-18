@@ -109,6 +109,7 @@ The Python RL training scripts have been moved to: **[SmartDartCorrector](https:
 - Video recordings of gameplay in `video/`
 - Real-time training monitoring available in AI training repository
 
+### Game Binaries Extractions
 
 ## 📚 References and Inspiration
 
@@ -116,7 +117,7 @@ The Python RL training scripts have been moved to: **[SmartDartCorrector](https:
 - [Hugging Face Deep RL Course](https://huggingface.co/learn/deep-rl-course/unitbonus3/godotrl) - Educational resources
 - [REINFORCE Algorithm](https://paperswithcode.com/method/reinforce) - Implementation reference
 
-## 📄 License
+## 📄 Licenses
 
 See the `LICENSE` file in the project directory for license information.
 
