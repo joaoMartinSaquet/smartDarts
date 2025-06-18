@@ -130,7 +130,6 @@ func _on_missed() -> void:
 	$Player.ai_controller.reward -= 0
 
 func gameover():
-	print("game over ! ")
 	if $Player.ai_controller.heuristic == "human":
 		save_game()
 		print("gathered reward  : ", $Player.ai_controller.reward)
